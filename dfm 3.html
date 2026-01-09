@@ -1,0 +1,4020 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DFM Foods - Crax Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap"
+      rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f3f2f1;
+        --card-bg: #ffffff;
+        --text: #323130;
+        --text-sec: #605e5c;
+        --text-muted: #a19f9d;
+        --border: #edebe9;
+        --accent: #0078d4;
+        --green: #107c10;
+        --yellow: #ffb900;
+        --red: #d13438;
+        --orange: #ff8c00;
+        --purple: #8764b8;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 12px;
+      }
+
+      /* Top Navigation Bar */
+      .top-nav {
+        background: white;
+        border-bottom: 1px solid var(--border);
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .top-nav-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo {
+        background: var(--accent);
+        color: white;
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 11px;
+      }
+      .dashboard-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .top-nav-tabs {
+        display: flex;
+        gap: 8px;
+      }
+      .top-tab {
+        padding: 8px 16px;
+        background: transparent;
+        border: none;
+        color: var(--text-sec);
+        font-size: 12px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .top-tab:hover {
+        background: var(--bg);
+      }
+      .top-tab.active {
+        background: var(--accent);
+        color: white;
+        font-weight: 600;
+      }
+      .top-nav-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+      .live-indicator {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .live-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--green);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .dashboard {
+        padding: 20px;
+        max-width: 1800px;
+        margin: 0 auto;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+      }
+      .header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .header .subtitle {
+        font-size: 12px;
+        color: var(--text-sec);
+      }
+
+      /* Slicers */
+      .slicers {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .slicer {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 10px 14px;
+        min-width: 140px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        cursor: pointer;
+      }
+      .slicer:hover {
+        border-color: var(--accent);
+      }
+      .slicer-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .slicer-value {
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        justify-content: space-between;
+      }
+      .slicer-value::after {
+        content: "▾";
+        color: var(--text-muted);
+        font-size: 10px;
+      }
+
+      /* KPI Cards */
+      .kpi-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      .kpi-card {
+        background: var(--card-bg);
+        border-radius: 8px;
+        padding: 16px 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+      .kpi-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+      }
+      .kpi-card.blue::before {
+        background: linear-gradient(90deg, var(--accent), #50a3d9);
+      }
+      .kpi-card.green::before {
+        background: linear-gradient(90deg, var(--green), #4caf50);
+      }
+      .kpi-card.red::before {
+        background: linear-gradient(90deg, var(--red), #e57373);
+      }
+      .kpi-card.orange::before {
+        background: linear-gradient(90deg, var(--orange), #ffb74d);
+      }
+      .kpi-card.yellow::before {
+        background: linear-gradient(90deg, var(--yellow), #ffe082);
+      }
+      .kpi-label {
+        font-size: 11px;
+        color: var(--text-sec);
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .kpi-badge {
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-weight: 600;
+      }
+      .kpi-badge.ftd {
+        background: #deecf9;
+        color: var(--accent);
+      }
+      .kpi-badge.mtd {
+        background: #efe6f7;
+        color: var(--purple);
+      }
+      .kpi-badge.live {
+        background: #dff6dd;
+        color: var(--green);
+      }
+      .kpi-value {
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 6px;
+      }
+      .kpi-value.green {
+        color: var(--green);
+      }
+      .kpi-value.red {
+        color: var(--red);
+      }
+      .kpi-value.orange {
+        color: var(--orange);
+      }
+      .kpi-trend {
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .kpi-trend.up {
+        color: var(--green);
+      }
+      .kpi-trend.down {
+        color: var(--red);
+      }
+      .kpi-target {
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+
+      /* Visual Card */
+      .visual-card {
+        background: var(--card-bg);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+      .visual-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .visual-title {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .hierarchy-badge {
+        font-size: 10px;
+        padding: 3px 8px;
+        background: #deecf9;
+        color: var(--accent);
+        border-radius: 12px;
+        margin-left: 8px;
+      }
+      .visual-actions {
+        display: flex;
+        gap: 4px;
+      }
+      .visual-btn {
+        width: 26px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        cursor: pointer;
+        color: var(--text-sec);
+        font-size: 14px;
+      }
+      .visual-btn:hover {
+        background: var(--bg);
+        border-color: var(--border);
+      }
+
+      /* Matrix */
+      .matrix-scroll {
+        overflow-x: auto;
+      }
+      .matrix {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .matrix th {
+        background: #faf9f8;
+        padding: 10px 12px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-sec);
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      .matrix th.num {
+        text-align: right;
+      }
+      .matrix td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #f3f2f1;
+        font-size: 12px;
+      }
+      .matrix td.num {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .matrix tbody tr:hover {
+        background: #faf9f8;
+      }
+
+      /* Row hierarchy */
+      .row-name {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .expand-btn {
+        width: 18px;
+        height: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        font-size: 12px;
+        cursor: pointer;
+        line-height: 1;
+        font-weight: bold;
+        user-select: none;
+      }
+      .expand-btn:hover {
+        background: var(--border);
+      }
+      .level-0 td:first-child {
+        font-weight: 600;
+      }
+      .level-1 {
+        background: #faf9f8;
+      }
+      .level-1 .row-name {
+        padding-left: 24px;
+      }
+      .level-2 {
+        background: #f5f5f5;
+      }
+      .level-2 .row-name {
+        padding-left: 48px;
+      }
+      .level-3 {
+        background: #f0f0f0;
+      }
+      .level-3 .row-name {
+        padding-left: 72px;
+      }
+      .level-4 {
+        background: #eaeaea;
+      }
+      .level-4 .row-name {
+        padding-left: 96px;
+      }
+      .level-5 .row-name {
+        padding-left: 120px;
+      }
+
+      /* Conditional formatting */
+      .cf-good {
+        background: rgba(16, 124, 16, 0.1);
+        color: var(--green);
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 4px;
+        display: inline-block;
+        min-width: 50px;
+        text-align: center;
+      }
+      .cf-warning {
+        background: rgba(255, 185, 0, 0.15);
+        color: #996600;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 4px;
+        display: inline-block;
+        min-width: 50px;
+        text-align: center;
+      }
+      .cf-bad {
+        background: rgba(209, 52, 56, 0.1);
+        color: var(--red);
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 4px;
+        display: inline-block;
+        min-width: 50px;
+        text-align: center;
+      }
+
+      /* Data bar */
+      .data-bar-cell {
+        position: relative;
+        min-width: 90px;
+      }
+      .data-bar {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 18px;
+        border-radius: 2px;
+        opacity: 0.25;
+      }
+      .data-bar-value {
+        position: relative;
+        z-index: 1;
+        font-weight: 600;
+      }
+
+      /* Status */
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .status-dot.green {
+        background: var(--green);
+      }
+      .status-dot.yellow {
+        background: var(--yellow);
+      }
+      .status-dot.red {
+        background: var(--red);
+      }
+      .status-dot.blue {
+        background: var(--accent);
+      }
+
+      /* Total row */
+      .total-row {
+        background: #f3f2f1 !important;
+        font-weight: 700;
+      }
+      .total-row td {
+        border-top: 2px solid var(--border);
+      }
+
+      /* Legend */
+      .visual-legend {
+        display: flex;
+        gap: 20px;
+        padding: 10px 16px;
+        background: #faf9f8;
+        border-top: 1px solid var(--border);
+        font-size: 10px;
+        color: var(--text-sec);
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .legend-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+      }
+
+      /* Grid */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+      }
+      .grid-4 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 16px;
+      }
+
+      .dashboard-section {
+        display: none;
+      }
+      .dashboard-section.active {
+        display: block;
+      }
+
+      @media (max-width: 1200px) {
+        .kpi-row {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .grid-3,
+        .grid-4 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 800px) {
+        .kpi-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .grid-2,
+        .grid-3,
+        .grid-4 {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <div class="top-nav">
+      <div class="top-nav-left">
+        <div class="logo">DFM</div>
+        <div class="dashboard-title">DFM Foods - Crax Dashboard</div>
+      </div>
+      <div class="top-nav-tabs">
+        <button class="top-tab active" onclick="showPage('plant')">
+          Plant Performance
+        </button>
+        <button class="top-tab" onclick="showPage('cfa')">
+          CFA Performance
+        </button>
+        <button class="top-tab" onclick="showPage('payment')">
+          Payment Performance
+        </button>
+      </div>
+      <div class="top-nav-right">
+        <div class="live-indicator">
+          <span class="live-dot"></span>
+          Live Data
+        </div>
+        <span>Last updated: 02-Dec-2025 10:48</span>
+      </div>
+    </div>
+
+    <div class="dashboard">
+      <!-- ======================= PLANT PERFORMANCE ======================= -->
+      <section id="plant-section" class="dashboard-section active">
+        <div class="header">
+          <div>
+            <h1>🏭 Plant Performance</h1>
+            <span class="subtitle"
+              >Production, Dispatch, Inventory & Quality Metrics</span
+            >
+          </div>
+          <div style="display: flex; align-items: center; gap: 16px">
+            <div class="refresh-info">
+              Last refreshed<br /><span class="time">02-Dec-2025 10:48</span>
+            </div>
+            <button class="refresh-btn">↻ Refresh</button>
+          </div>
+        </div>
+        <div class="slicers">
+          <div class="slicer">
+            <div class="slicer-label">Plant</div>
+            <div class="slicer-value">All Plants</div>
+          </div>
+          <div class="slicer">
+            <div class="slicer-label">Date</div>
+            <div class="slicer-value">02-Dec-2025</div>
+          </div>
+          <div class="slicer">
+            <div class="slicer-label">Period</div>
+            <div class="slicer-value">MTD</div>
+          </div>
+          <div class="slicer">
+            <div class="slicer-label">Line</div>
+            <div class="slicer-value">All Lines</div>
+          </div>
+          <div class="slicer">
+            <div class="slicer-label">Segment</div>
+            <div class="slicer-value">All</div>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card blue">
+            <div class="kpi-label">
+              Production (FTD) <span class="kpi-badge ftd">FTD</span>
+            </div>
+            <div class="kpi-value">12,450</div>
+            <!-- <div class="kpi-trend up">↑ 8.2% vs yesterday</div>
+            <div class="kpi-target">Target: 12,600 cases</div> -->
+          </div>
+          <div class="kpi-card green">
+            <div class="kpi-label">
+              Carton Fill Rate <span class="kpi-badge mtd">MTD</span>
+            </div>
+            <div class="kpi-value green">94.2%</div>
+            <!-- <div class="kpi-trend up">↑ 2.1% vs LM</div>
+            <div class="kpi-target">Target: 95%</div> -->
+          </div>
+          <div class="kpi-card orange">
+            <div class="kpi-label">
+              OTIF % <span class="kpi-badge ftd">FTD</span>
+            </div>
+            <div class="kpi-value orange">87.5%</div>
+            <!-- <div class="kpi-trend down">↓ 4.5% vs target</div>
+            <div class="kpi-target">Target: 92%</div> -->
+          </div>
+          <div class="kpi-card red">
+            <div class="kpi-label">
+              Trucks Pending >24hrs <span class="kpi-badge live">LIVE</span>
+            </div>
+            <div class="kpi-value red">23</div>
+            <!-- <div class="kpi-trend down">↑ 5 from yesterday</div>
+            <div class="kpi-target">Target: <10</div> -->
+          </div>
+          <div class="kpi-card yellow">
+            <div class="kpi-label">
+              Avg Truck TAT <span class="kpi-badge ftd">FTD</span>
+            </div>
+            <div class="kpi-value">4.5 hrs</div>
+            <!-- <div class="kpi-trend up">↓ 0.3 hrs improved</div>
+            <div class="kpi-target">Target: <4 hrs</div> -->
+          </div>
+        </div>
+
+        <!-- Production Matrix: Plant → Line → SKU → Details -->
+        <div class="visual-card">
+          <div class="visual-header">
+            <div>
+              <span class="visual-title">Production by Plant</span
+              ><span class="hierarchy-badge"
+                >⊞ Plant → Line → SKU → Details</span
+              >
+            </div>
+            <div class="visual-actions">
+              <button
+                class="visual-btn"
+                onclick="openDrillthrough('production')">
+                📊</button
+              ><button class="visual-btn">⊞</button
+              ><button class="visual-btn">⛶</button>
+            </div>
+          </div>
+          <div class="matrix-scroll">
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th style="min-width: 260px">Plant / Line / SKU / Details</th>
+                  <th class="num">FTD (Cases)</th>
+                  <th class="num">MTD Avg</th>
+                  <th class="num">Target</th>
+                  <th class="num">Variance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button
+                      ><strong>DFM Foods Ltd- G.Noida</strong>
+                    </div>
+                  </td>
+                  <td class="num data-bar-cell">
+                    <div
+                      class="data-bar"
+                      style="width: 70%; background: var(--green)"></div>
+                    <span class="data-bar-value">2,507,000</span>
+                  </td>
+                  <td class="num">4,890</td>
+                  <td class="num">5,000</td>
+                  <td class="num"><span class="cf-good">+4.8%</span></td>
+                </tr>
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Line 1-GN
+                    </div>
+                  </td>
+                  <td class="num">763,000</td>
+                  <td class="num">174,892</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-good">23%</span></td>
+                  
+                </tr>
+                <tr class="level-2">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Rings
+                    </div>
+                  </td>
+                  <td class="num">763,000</td>
+                  <td class="num">174,892</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-good">23%</span></td>
+                  
+                </tr>
+                <tr class="level-3" style="cursor: pointer;" onclick="openDrilldown('Greater Noida Plant', 'Line 1-GN', 'Rings Tangy Tomato Rs.5')" title="Click to view detailed analysis">
+                  <td>
+                    <div class="row-name">
+                      Rings Tangy Tomato Rs.5
+                      <span style="margin-left: 8px; color: var(--accent); font-size: 10px;">🔍 Drill-down</span>
+                    </div>
+                  </td>
+                  <td class="num">763,000</td>
+                  <td class="num">143,694</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-good">19%</span></td>
+                  
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Rings Masala Mania Rs.5</div></td>
+                  <td class="num">763,000</td>
+                  <td class="num">11,515</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-warning">2%</span></td>
+                  
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Rings Tangy Tomato Rs.10</div></td>
+                  <td class="num">763,000</td>
+                  <td class="num">3,133</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-bad">0%</span></td>
+                  
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Rings Masala Mania Rs.25</div></td>
+                  <td class="num">763,000</td>
+                  <td class="num">3,101</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-bad">0%</span></td>
+                  
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Rings Thai Sweet Chilli Rs.5</div></td>
+                  <td class="num">763,000</td>
+                  <td class="num">2,433</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-bad">0%</span></td>
+                  
+                </tr>
+                <!-- <tr class="level-3">
+                  <td><div class="row-name">Rings Chatpata Rs.75</div></td>
+                  <td class="num">763,000</td>
+                  <td class="num">2,321</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-bad">0%</span></td>
+                  
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Rings Chatpata Rs.10</div></td>
+                  <td class="num">763,000</td>
+                  <td class="num">1,930</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-bad">0%</span></td>
+                  
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Rings Sour&C&O Rs.5</div></td>
+                  <td class="num">763,000</td>
+                  <td class="num">1,684</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-bad">0%</span></td>
+                  
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Rings Tangy Tomato Rs.25</div></td>
+                  <td class="num">763,000</td>
+                  <td class="num">1,354</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-bad">0%</span></td> -->
+                  
+                </tr>
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Line 2-GN
+                    </div>
+                  </td>
+                  <td class="num">381,500</td>
+                  <td class="num">149,850</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-good">39%</span></td>
+                  
+                </tr>
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Line 3-GN
+                    </div>
+                  </td>
+                  <td class="num">490,500</td>
+                  <td class="num">141,644</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-good">29%</span></td>
+                  
+                </tr>
+                <!-- <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Line 3-GN
+                    </div>
+                  </td>
+                  <td class="num">490,500</td>
+                  <td class="num">97,189</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-good">20%</span></td>
+                  
+                </tr>
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Line 2-GN
+                    </div>
+                  </td>
+                  <td class="num">381,500</td>
+                  <td class="num">44,521</td>
+                  <td class="num">-</td>
+                  <td class="num"><span class="cf-warning">12%</span></td>
+                  
+                </tr> -->
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM Foods Ltd-GZB</strong>
+                    </div>
+                  </td>
+                  <td class="num data-bar-cell">
+                    <div
+                      class="data-bar"
+                      style="width: 40%; background: var(--green)"></div>
+                    <span class="data-bar-value">1,079,100</span>
+                  </td>
+                  <td class="num">222,613</td>
+                  <td class="num">751,735</td>
+                  <td class="num"><span class="cf-good">21%</span></td>
+                  
+                </tr>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM FOODS LTD-KOLKATA(Plant)</strong>
+                    </div>
+                  </td>
+                  <td class="num data-bar-cell">
+                    <div
+                      class="data-bar"
+                      style="width: 15%; background: var(--green)"></div>
+                    <span class="data-bar-value">392,400</span>
+                  </td>
+                  <td class="num">92,312</td>
+                  <td class="num">279,885</td>
+                  <td class="num"><span class="cf-good">24%</span></td>
+                  
+                </tr>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM FOODS LTD-KOLKATA(P-2)</strong>
+                    </div>
+                  </td>
+                  <td class="num data-bar-cell">
+                    <div
+                      class="data-bar"
+                      style="width: 13%; background: var(--green)"></div>
+                    <span class="data-bar-value">348,800</span>
+                  </td>
+                  <td class="num">72,365</td>
+                  <td class="num">193,598</td>
+                  <td class="num"><span class="cf-good">21%</span></td>
+                  
+                </tr>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM Foods-Kashipur</strong>
+                    </div>
+                  </td>
+                  <td class="num data-bar-cell">
+                    <div
+                      class="data-bar"
+                      style="width: 14%; background: var(--orange)"></div>
+                    <span class="data-bar-value">370,600</span>
+                  </td>
+                  <td class="num">54,489</td>
+                  <td class="num">192,724</td>
+                  <td class="num"><span class="cf-warning">15%</span></td>
+                  
+                </tr>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM Foods Ltd- South(Plant)</strong>
+                    </div>
+                  </td>
+                  <td class="num data-bar-cell">
+                    <div
+                      class="data-bar"
+                      style="width: 12%; background: var(--orange)"></div>
+                    <span class="data-bar-value">337,900</span>
+                  </td>
+                  <td class="num">47,229</td>
+                  <td class="num">62,640</td>
+                  <td class="num"><span class="cf-warning">14%</span></td>
+                  
+                </tr>
+                <tr class="total-row">
+                  <td><strong>Total</strong></td>
+                  <td class="num"><strong>5,362,800</strong></td>
+                  <td class="num"><strong>1,097,106</strong></td>
+                  <td class="num"><strong>3,222,616</strong></td>
+                  <td class="num"><strong>20%</strong></td>
+                  
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box">
+            <strong>💡 Drillthrough:</strong> Click 📊 for Production Trends,
+            Line Efficiency, Hours Breakdown charts
+          </div>
+          <div class="visual-legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: #dff6dd"></div>
+              Above Target
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #fff4ce"></div>
+              Within 5%
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #fde7e9"></div>
+              Below Target
+            </div>
+          </div>
+        </div>
+
+        <!-- Dispatch Matrix -->
+        <div class="visual-card">
+          <div class="visual-header">
+            <div>
+              <span class="visual-title">Dispatch Performance</span
+              ><span class="hierarchy-badge"
+                >⊞ Plant → Line → SKU → Details</span
+              >
+            </div>
+            <div class="visual-actions">
+              <button class="visual-btn" onclick="openDrillthrough('dispatch')">
+                📊</button
+              ><button class="visual-btn">⊞</button>
+            </div>
+          </div>
+          <div class="matrix-scroll">
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th style="min-width: 240px">Company</th>
+                  <th class="num">FTD Dispatch QTY</th>
+                  <th class="num">MTD  Dispatch QTY(Avg)</th>
+                  <th class="num">Carton Fill Rate</th>
+                  <th class="num">SKU Fill</th>
+                  <th class="num">OTIF % FTD</th>
+                  <th class="num">OTIF % MTD</th>
+                  <th class="num">L1/L2 %</th>
+                  <th class="num">Loadability</th>
+                  <th class="num">Avg Order TAT</th>
+                  <th class="num">Avg Transit Time</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button
+                      ><strong>DFM Foods Ltd- G.Noida Plant</strong>
+                    </div>
+                  </td>
+                  <td class="num">5,240</td>
+                  <td class="num">4,890</td>
+                  <td class="num"><span class="cf-good">95.8%</span></td>
+                  <td class="num"><span class="cf-good">93.5%</span></td>
+                  <td class="num"><span class="cf-good">89.2%</span></td>
+                  <td class="num"><span class="cf-good">91.5%</span></td>
+                  <td class="num"><span class="cf-warning">10.5%</span></td>
+                  <td class="num"><span class="cf-good">92.8%</span></td>
+                  <td class="num">4.0</td>
+                  <td class="num">2.8</td>
+                </tr>
+                <!-- <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>FG (Main) Warehouse-GN
+                    </div>
+                  </td>
+                  <td class="num">2,100</td>
+                  <td class="num">1,950</td>
+                  <td class="num"><span class="cf-good">96.2%</span></td>
+                  <td class="num"><span class="cf-good">94.1%</span></td>
+                  <td class="num"><span class="cf-good">90.5%</span></td>
+                  <td class="num"><span class="cf-warning">9.2%</span></td>
+                  <td class="num"><span class="cf-good">93.5%</span></td>
+                  <td class="num">3.8</td>
+                </tr> -->
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>CFA
+                    </div>
+                  </td>
+                  <td class="num">850</td>
+                  <td class="num">800</td>
+                  <td class="num"><span class="cf-good">97.1%</span></td>
+                  <td class="num"><span class="cf-good">95.2%</span></td>
+                  <td class="num"><span class="cf-good">92.1%</span></td>
+                  <td class="num"><span class="cf-good">93.8%</span></td>
+                  <td class="num"><span class="cf-good">7.5%</span></td>
+                  <td class="num"><span class="cf-good">94.8%</span></td>
+                  <td class="num">3.5</td>
+                  <td class="num">2.2</td>
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Gaziabad</div></td>
+                  <td class="num">320</td>
+                  <td class="num">300</td>
+                  <td class="num"><span class="cf-good">98.2%</span></td>
+                  <td class="num"><span class="cf-good">96.5%</span></td>
+                  <td class="num"><span class="cf-good">94.2%</span></td>
+                  <td class="num"><span class="cf-good">95.8%</span></td>
+                  <td class="num"><span class="cf-good">5.5%</span></td>
+                  <td class="num"><span class="cf-good">95.2%</span></td>
+                  <td class="num">3.2</td>
+                  <td class="num">2.0</td>
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Faridabad</div></td>
+                  <td class="num">280</td>
+                  <td class="num">260</td>
+                  <td class="num"><span class="cf-good">95.5%</span></td>
+                  <td class="num"><span class="cf-good">93.2%</span></td>
+                  <td class="num"><span class="cf-warning">88.5%</span></td>
+                  <td class="num"><span class="cf-warning">90.2%</span></td>
+                  <td class="num"><span class="cf-bad">12.1%</span></td>
+                  <td class="num"><span class="cf-warning">91.2%</span></td>
+                  <td class="num">4.2</td>
+                  <td class="num">2.8</td>
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Agra</div></td>
+                  <td class="num">250</td>
+                  <td class="num">240</td>
+                  <td class="num"><span class="cf-good">97.5%</span></td>
+                  <td class="num"><span class="cf-good">96.0%</span></td>
+                  <td class="num"><span class="cf-good">93.5%</span></td>
+                  <td class="num"><span class="cf-good">94.8%</span></td>
+                  <td class="num"><span class="cf-good">4.8%</span></td>
+                  <td class="num"><span class="cf-good">98.0%</span></td>
+                  <td class="num">3.0</td>
+                  <td class="num">1.8</td>
+                </tr>
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Direct
+                    </div>
+                  </td>
+                  <td class="num">650</td>
+                  <td class="num">600</td>
+                  <td class="num"><span class="cf-good">95.5%</span></td>
+                  <td class="num"><span class="cf-good">93.2%</span></td>
+                  <td class="num"><span class="cf-warning">88.5%</span></td>
+                  <td class="num"><span class="cf-good">91.2%</span></td>
+                  <td class="num"><span class="cf-warning">10.5%</span></td>
+                  <td class="num"><span class="cf-good">92.5%</span></td>
+                  <td class="num">4.0</td>
+                  <td class="num">3.2</td>
+                </tr>
+                <tr class="level-3">
+                  <td><div class="row-name">Haldwani</div></td>
+                  <td class="num">250</td>
+                  <td class="num">240</td>
+                  <td class="num"><span class="cf-good">97.5%</span></td>
+                  <td class="num"><span class="cf-good">96.0%</span></td>
+                  <td class="num"><span class="cf-good">93.5%</span></td>
+                  <td class="num"><span class="cf-good">94.8%</span></td>
+                  <td class="num"><span class="cf-good">4.8%</span></td>
+                  <td class="num"><span class="cf-good">98.0%</span></td>
+                  <td class="num">3.0</td>
+                  <td class="num">2.5</td>
+                </tr>
+                <!-- <tr class="level-2">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Rings Thai Sweet Chilli Rs.5
+                    </div>
+                  </td>
+                  <td class="num">600</td>
+                  <td class="num">550</td>
+                  <td class="num"><span class="cf-good">96.0%</span></td>
+                  <td class="num"><span class="cf-good">94.0%</span></td>
+                  <td class="num"><span class="cf-good">91.0%</span></td>
+                  <td class="num"><span class="cf-warning">9.5%</span></td>
+                  <td class="num"><span class="cf-good">93.0%</span></td>
+                  <td class="num">3.8</td>
+                </tr> -->
+                <!-- <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Line 2-GN
+                    </div>
+                  </td>
+                  <td class="num">1,890</td>
+                  <td class="num">1,750</td>
+                  <td class="num"><span class="cf-good">95.2%</span></td>
+                  <td class="num"><span class="cf-good">92.8%</span></td>
+                  <td class="num"><span class="cf-warning">87.5%</span></td>
+                  <td class="num"><span class="cf-bad">12.5%</span></td>
+                  <td class="num"><span class="cf-good">92.0%</span></td>
+                  <td class="num">4.2</td>
+                </tr>
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Line 3-GN
+                    </div>
+                  </td>
+                  <td class="num">1,250</td>
+                  <td class="num">1,190</td>
+                  <td class="num"><span class="cf-good">95.8%</span></td>
+                  <td class="num"><span class="cf-good">93.5%</span></td>
+                  <td class="num"><span class="cf-good">89.5%</span></td>
+                  <td class="num"><span class="cf-warning">10.0%</span></td>
+                  <td class="num"><span class="cf-good">92.8%</span></td>
+                  <td class="num">4.0</td>
+                </tr> -->
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM Foods Ltd-GZB</strong>
+                    </div>
+                  </td>
+                  <td class="num">4,120</td>
+                  <td class="num">4,500</td>
+                  <td class="num"><span class="cf-warning">92.5%</span></td>
+                  <td class="num"><span class="cf-warning">89.8%</span></td>
+                  <td class="num"><span class="cf-warning">84.5%</span></td>
+                  <td class="num"><span class="cf-warning">86.8%</span></td>
+                  <td class="num"><span class="cf-bad">14.2%</span></td>
+                  <td class="num"><span class="cf-warning">89.5%</span></td>
+                  <td class="num">5.2</td>
+                  <td class="num">3.5</td>
+                </tr>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM FOODS LTD-KOLKATA(Plant)</strong>
+                    </div>
+                  </td>
+                  <td class="num">3,090</td>
+                  <td class="num">2,980</td>
+                  <td class="num"><span class="cf-good">94.2%</span></td>
+                  <td class="num"><span class="cf-good">92.1%</span></td>
+                  <td class="num"><span class="cf-warning">88.0%</span></td>
+                  <td class="num"><span class="cf-good">90.5%</span></td>
+                  <td class="num"><span class="cf-warning">9.8%</span></td>
+                  <td class="num"><span class="cf-good">92.0%</span></td>
+                  <td class="num">4.3</td>
+                  <td class="num">3.0</td>
+                </tr>
+                <tr class="total-row">
+                  <td><strong>Total</strong></td>
+                  <td class="num"><strong>12,450</strong></td>
+                  <td class="num"><strong>12,370</strong></td>
+                  <td class="num"><strong>94.2%</strong></td>
+                  <td class="num"><strong>91.8%</strong></td>
+                  <td class="num"><strong>87.5%</strong></td>
+                  <td class="num"><strong>90.3%</strong></td>
+                  <td class="num"><strong>11.4%</strong></td>
+                  <td class="num"><strong>91.5%</strong></td>
+                  <td class="num"><strong>4.5</strong></td>
+                  <td class="num"><strong>2.9</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box">
+            <strong>💡 Clickthrough:</strong> Fill Rate Loss (Stock NA / Not
+            invoiced) | OTIF Loss (Stock / Warehouse / Transit delays)
+          </div>
+        </div>
+
+        <!-- RM/PM Stock Status - Three Tables -->
+        <div class="grid-3">
+          <!-- Overstock -->
+          <div class="visual-card">
+            <div class="visual-header">
+              <div>
+                <span class="visual-title">RM/PM Overstock</span
+                ><span class="hierarchy-badge">⊞ Plant → Line → SKU</span>
+              </div>
+            </div>
+            <div class="matrix-scroll" style="max-height: 280px">
+              <table class="matrix">
+                <thead>
+                  <tr>
+                    <th style="min-width: 180px">Plant / Line / SKU</th>
+                    <th class="num">No. Stock</th>
+                    <th class="num">Qty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button
+                        ><strong>DFM Foods Ltd- G.Noida</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">8</span></td>
+                    <td class="num">28,450</td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Raw Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">5</span></td>
+                    <td class="num">11,700</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Oil</div></td>
+                    <td class="num">3</td>
+                    <td class="num">8,500</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Flavours</div></td>
+                    <td class="num">2</td>
+                    <td class="num">3,200</td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Packaging Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">3</span></td>
+                    <td class="num">16,750</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM Foods Ltd-GZB</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">5</span></td>
+                    <td class="num">19,800</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM FOODS LTD-KOLKATA(Plant)</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">3</span></td>
+                    <td class="num">12,350</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td><strong>Total</strong></td>
+                    <td class="num"><strong>16</strong></td>
+                    <td class="num"><strong>60,600</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Understock -->
+          <div class="visual-card">
+            <div class="visual-header">
+              <div>
+                <span class="visual-title">RM/PM Understock</span
+                ><span class="hierarchy-badge">⊞ Plant → Line → SKU</span>
+              </div>
+            </div>
+            <div class="matrix-scroll" style="max-height: 280px">
+              <table class="matrix">
+                <thead>
+                  <tr>
+                    <th style="min-width: 180px">Plant / Line / SKU</th>
+                    <th class="num">No. Stock</th>
+                    <th class="num">Qty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button
+                        ><strong>DFM Foods Ltd- G.Noida</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">12</span></td>
+                    <td class="num">8,920</td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Raw Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">7</span></td>
+                    <td class="num">2,750</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Cereal</div></td>
+                    <td class="num">4</td>
+                    <td class="num">1,800</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Flavours</div></td>
+                    <td class="num">3</td>
+                    <td class="num">950</td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Packaging Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">5</span></td>
+                    <td class="num">6,170</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM Foods Ltd-GZB</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">8</span></td>
+                    <td class="num">5,480</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM FOODS LTD-KOLKATA(Plant)</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">6</span></td>
+                    <td class="num">4,250</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td><strong>Total</strong></td>
+                    <td class="num"><strong>26</strong></td>
+                    <td class="num"><strong>18,650</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Low Stock -->
+          <div class="visual-card">
+            <div class="visual-header">
+              <div>
+                <span class="visual-title">RM/PM Low Stock</span
+                ><span class="hierarchy-badge">⊞ Plant → Line → SKU</span>
+              </div>
+            </div>
+            <div class="matrix-scroll" style="max-height: 280px">
+              <table class="matrix">
+                <thead>
+                  <tr>
+                    <th style="min-width: 180px">Plant / Line / SKU</th>
+                    <th class="num">No. Stock</th>
+                    <th class="num">Qty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button
+                        ><strong>DFM Foods Ltd- G.Noida</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">6</span></td>
+                    <td class="num">2,850</td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Raw Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">3</span></td>
+                    <td class="num">630</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Flavours</div></td>
+                    <td class="num">2</td>
+                    <td class="num">450</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Spices & Condiments</div></td>
+                    <td class="num">1</td>
+                    <td class="num">180</td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Packaging Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">3</span></td>
+                    <td class="num">2,220</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM Foods Ltd-GZB</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">4</span></td>
+                    <td class="num">1,950</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM FOODS LTD-KOLKATA(Plant)</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">5</span></td>
+                    <td class="num">2,380</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td><strong>Total</strong></td>
+                    <td class="num"><strong>15</strong></td>
+                    <td class="num"><strong>7,180</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Trucks Pending -->
+          <div class="visual-card">
+            <div class="visual-header">
+              <div>
+                <span class="visual-title">RM PM Unloading</span
+                ><span class="hierarchy-badge"
+                  >⊞ Plant → Line → SKU → Supplier</span
+                >
+              </div>
+            </div>
+            <div class="matrix-scroll" style="max-height: 280px">
+              <table class="matrix">
+                <thead>
+                  <tr>
+                    <th style="min-width: 200px">
+                      Company
+                    </th>
+                    <th class="num">>FTD Under Unload</th>
+                    <th class="num">>MTD Under Unload</th>
+                    <!-- <th>Reason</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button
+                        ><strong>DFM Foods Ltd- G.Noida</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">12</span></td>
+                    <td class="num"><span class="cf-bad">3</span></td>
+                    <!-- <td></td> -->
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Raw Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">6</span></td>
+                    <td class="num"><span class="cf-warning">2</span></td>
+                    <!-- <td></td> -->
+                  </tr>
+                  <tr class="level-2">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Sugar
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">3</span></td>
+                    <td class="num"><span class="cf-warning">1</span></td>
+                    <!-- <td></td> -->
+                  </tr>
+                  <tr class="level-3">
+                    <td><div class="row-name">ABC Sugar Mills</div></td>
+                    <td class="num">2</td>
+                    <td class="num">1</td>
+                    <!-- <td>QC Delay</td> -->
+                  </tr>
+                  <tr class="level-3">
+                    <td><div class="row-name">XYZ Sugar Co</div></td>
+                    <td class="num">1</td>
+                    <td class="num">0</td>
+                    <!-- <td>Gate Entry</td> -->
+                  </tr>
+                  <tr class="level-2">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Corn Meal
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">2</span></td>
+                    <td class="num"><span class="cf-warning">1</span></td>
+                    <!-- <td></td> -->
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Packaging Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">4</span></td>
+                    <td class="num"><span class="cf-warning">1</span></td>
+                    <!-- <td></td> -->
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM Foods Ltd-GZB</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">7</span></td>
+                    <td class="num"><span class="cf-warning">2</span></td>
+                    <!-- <td></td> -->
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM FOODS LTD-KOLKATA(Plant)</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">4</span></td>
+                    <td class="num">0</td>
+                    <!-- <td></td> -->
+                  </tr>
+                  <tr class="total-row">
+                    <td><strong>Total</strong></td>
+                    <td class="num"><strong>23</strong></td>
+                    <td class="num"><strong>5</strong></td>
+                    <!-- <td></td> -->
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        
+          <!-- Quality -->
+          <div class="visual-card">
+            <div class="visual-header">
+              <span class="visual-title">Quality Metrics</span
+              ><span class="hierarchy-badge">⊞ Plant → Line → SKU</span>
+            </div>
+            <div style="padding: 12px">
+              <table class="matrix">
+                <thead>
+                  <tr>
+                    <th>Company</th>
+                    <th class="num">Air Leak</th>
+                    <th class="num">Rejection</th>
+                    <th class="num">Target</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button
+                        ><strong>DFM Foods Ltd- G.Noida</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-good">3.6%</span></td>
+                    <td class="num"><span class="cf-warning">1.8%</span></td>
+                    <td class="num"><1.5%</td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Line 1- GN
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-good">3.5%</span></td>
+                    <td class="num"><span class="cf-good">1.2%</span></td>
+                    <td class="num"><1.5%</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Fritts Peri Peri Rs.5
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-good">2.5%</span></td>
+                    <td class="num"><span class="cf-good">1.2%</span></td>
+                    <td class="num"><1.5%</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Rings Masala Mania Rs.5
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-good">1.0%</span></td>
+                    <td class="num"><span class="cf-good"></span></td>
+                    <td class="num"><1.5%</td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Line 2- GN
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-good">0.7%</span></td>
+                    <td class="num"><span class="cf-warning">2.1%</span></td>
+                    <td class="num"><1.5%</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM Foods Ltd-GZB</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">1.2%</span></td>
+                    <td class="num"><span class="cf-warning">2.1%</span></td>
+                    <td class="num"><1.5%</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM Foods Ltd-KOLKATA(Plant)</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-good">0.7%</span></td>
+                    <td class="num"><span class="cf-good">1.2%</span></td>
+                    <td class="num"><1.5%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <!-- RM/PM Rejections -->
+          <div class="visual-card">
+            <div class="visual-header">
+              <span class="visual-title">RM/PM Rejections (last 10 days)</span
+              ><span class="hierarchy-badge"
+                >⊞ Plant → Line → SKU</span
+              >
+            </div>
+            <div class="matrix-scroll" style="max-height: 280px">
+              <table class="matrix">
+                <thead>
+                  <tr>
+                    <th style="min-width: 180px">Plant / Line / SKU</th>
+                    <th class="num">Rejected Qty</th>
+                    <th class="num">Rejection %</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button
+                        ><strong>DFM Foods Ltd- G.Noida</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">2,450</span></td>
+                    <td class="num"><span class="cf-warning">1.8%</span></td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Raw Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">1,580</span></td>
+                    <td class="num"><span class="cf-warning">2.1%</span></td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Cereal</div></td>
+                    <td class="num">980</td>
+                    <td class="num">2.5%</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Flavours</div></td>
+                    <td class="num">600</td>
+                    <td class="num">1.8%</td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Packaging Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">870</span></td>
+                    <td class="num"><span class="cf-warning">1.5%</span></td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM Foods Ltd-GZB</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">1,820</span></td>
+                    <td class="num"><span class="cf-warning">2.1%</span></td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM FOODS LTD-KOLKATA(Plant)</strong>
+                      </div>
+                    </td>
+                    <td class="num">1,150</td>
+                    <td class="num"><span class="cf-good">1.2%</span></td>
+                  </tr>
+                  <tr class="total-row">
+                    <td><strong>Total</strong></td>
+                    <td class="num"><strong>5,420</strong></td>
+                    <td class="num"><strong>1.7%</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- RM/PM Expiry Value -->
+          <div class="visual-card">
+            <div class="visual-header">
+              <div>
+                <span class="visual-title">RM/PM Expiry</span
+                ><span class="hierarchy-badge">⊞ Plant → Line → SKU</span>
+              </div>
+            </div>
+            <div class="matrix-scroll" style="max-height: 280px">
+              <table class="matrix">
+                <thead>
+                  <tr>
+                    <th style="min-width: 180px">Plant / Line / SKU</th>
+                    <th class="num">Expired QTY</th>
+                    <th class="num">Value (₹L)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button
+                        ><strong>DFM Foods Ltd- G.Noida</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">8</span></td>
+                    <td class="num"><span class="cf-bad">₹4.2L</span></td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Raw Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">5</span></td>
+                    <td class="num">₹2.8L</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Cereal</div></td>
+                    <td class="num">3</td>
+                    <td class="num">₹1.9L</td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Flavours</div></td>
+                    <td class="num">2</td>
+                    <td class="num">₹0.9L</td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Packaging Material
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">3</span></td>
+                    <td class="num">₹1.4L</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM Foods Ltd-GZB</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">6</span></td>
+                    <td class="num"><span class="cf-bad">₹3.5L</span></td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>DFM FOODS LTD-KOLKATA(Plant)</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">4</span></td>
+                    <td class="num"><span class="cf-warning">₹2.1L</span></td>
+                  </tr>
+                  <tr class="total-row">
+                    <td><strong>Total</strong></td>
+                    <td class="num"><strong>18</strong></td>
+                    <td class="num"><strong>₹9.8L</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- FG Stock Age - Age buckets as columns -->
+        <div class="visual-card">
+          <div class="visual-header">
+            <div>
+              <span class="visual-title">FG Stock Age (Plant)</span
+              ><span class="hierarchy-badge">⊞ Plant → Line → SKU</span>
+            </div>
+          </div>
+          <div class="matrix-scroll">
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="min-width: 220px; vertical-align: middle;">Company / Line / Shelf Life</th>
+                  <th colspan="2" class="num green-head">>50% Shelf Life</th>
+                  <th colspan="2" class="num yellow-head">20-50% Shelf Life</th>
+                  <th colspan="2" class="num red-head"><20% Shelf Life</th>
+                  <th colspan="2" class="num red-head">Expired</th>
+                </tr>
+                <tr>
+                  <th class="num">Value (₹L)</th>
+                  <th class="num">Volume</th>
+                  <th class="num">Value (₹L)</th>
+                  <th class="num">Volume</th>
+                  <th class="num">Value (₹L)</th>
+                  <th class="num">Volume</th>
+                  <th class="num">Value (₹L)</th>
+                  <th class="num">Volume</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Level-0: DFM Foods Ltd- G.Noida Plant -->
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button
+                      ><strong>DFM Foods Ltd- G.Noida Plant</strong>
+                    </div>
+                  </td>
+                  <td class="num">₹119.2L</td>
+                  <td class="num">7,940</td>
+                  <td class="num">₹11.4L</td>
+                  <td class="num">750</td>
+                  <td class="num">₹4.0L</td>
+                  <td class="num">265</td>
+                  <td class="num">₹0.42L</td>
+                  <td class="num">28</td>
+                </tr>
+
+                <!-- Level-1: Extruded Category -->
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Extruded
+                    </div>
+                  </td>
+                  <td class="num">₹95.4L</td>
+                  <td class="num">6,360</td>
+                  <td class="num">₹9.1L</td>
+                  <td class="num">600</td>
+                  <td class="num">₹3.2L</td>
+                  <td class="num">212</td>
+                  <td class="num">₹0.34L</td>
+                  <td class="num">22</td>
+                </tr>
+
+                <!-- Level-2: Rings Product Family -->
+                <tr class="level-2">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Rings
+                    </div>
+                  </td>
+                  <td class="num">₹47.4L</td>
+                  <td class="num">3,160</td>
+                  <td class="num">₹4.5L</td>
+                  <td class="num">300</td>
+                  <td class="num">₹1.6L</td>
+                  <td class="num">106</td>
+                  <td class="num">₹0.17L</td>
+                  <td class="num">11</td>
+                </tr>
+
+                <!-- Level-3: Rings Tangy Tomato Product Name -->
+                <tr class="level-3">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Rings Tangy Tomato
+                    </div>
+                  </td>
+                  <td class="num">₹23.7L</td>
+                  <td class="num">1,580</td>
+                  <td class="num">₹2.0L</td>
+                  <td class="num">130</td>
+                  <td class="num">₹0.8L</td>
+                  <td class="num">55</td>
+                  <td class="num">₹0.09L</td>
+                  <td class="num">6</td>
+                </tr>
+
+                <!-- Level-4: Pack Sizes for Rings Tangy Tomato -->
+                <tr class="level-4">
+                  <td>
+                    <div class="row-name">
+                      Rs.5
+                    </div>
+                  </td>
+                  <td class="num">₹7.8L</td>
+                  <td class="num">520</td>
+                  <td class="num">₹0.7L</td>
+                  <td class="num">45</td>
+                  <td class="num">₹0.3L</td>
+                  <td class="num">18</td>
+                  <td class="num">₹0.03L</td>
+                  <td class="num">2</td>
+                </tr>
+                <tr class="level-4">
+                  <td>
+                    <div class="row-name">
+                      Rs.10
+                    </div>
+                  </td>
+                  <td class="num">₹6.3L</td>
+                  <td class="num">420</td>
+                  <td class="num">₹0.6L</td>
+                  <td class="num">38</td>
+                  <td class="num">₹0.2L</td>
+                  <td class="num">15</td>
+                  <td class="num">₹0.03L</td>
+                  <td class="num">2</td>
+                </tr>
+                <!-- <tr class="level-4">
+                  <td>
+                    <div class="row-name">
+                      Rs.25
+                    </div>
+                  </td>
+                  <td class="num">₹5.1L</td>
+                  <td class="num">340</td>
+                  <td class="num">₹0.5L</td>
+                  <td class="num">37</td>
+                  <td class="num">₹0.2L</td>
+                  <td class="num">12</td>
+                  <td class="num">₹0.02L</td>
+                  <td class="num">1</td>
+                </tr>
+                <tr class="level-4">
+                  <td>
+                    <div class="row-name">
+                      Rs.20
+                    </div>
+                  </td>
+                  <td class="num">₹4.5L</td>
+                  <td class="num">300</td>
+                  <td class="num">₹0.5L</td>
+                  <td class="num">30</td>
+                  <td class="num">₹0.1L</td>
+                  <td class="num">10</td>
+                  <td class="num">₹0.01L</td>
+                  <td class="num">1</td>
+                </tr> -->
+
+                <!-- Level-3: Rings Masala Mania Product Name -->
+                <!-- <tr class="level-3">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Rings Masala Mania
+                    </div>
+                  </td>
+                  <td class="num">₹13.7L</td>
+                  <td class="num">913</td>
+                  <td class="num">₹1.3L</td>
+                  <td class="num">83</td>
+                  <td class="num">₹0.4L</td>
+                  <td class="num">27</td>
+                  <td class="num">₹0.04L</td>
+                  <td class="num">3</td>
+                </tr>
+
+                
+                <tr class="level-4">
+                  <td>
+                    <div class="row-name">
+                      Rs.5
+                    </div>
+                  </td>
+                  <td class="num">₹7.8L</td>
+                  <td class="num">520</td>
+                  <td class="num">₹0.7L</td>
+                  <td class="num">45</td>
+                  <td class="num">₹0.3L</td>
+                  <td class="num">18</td>
+                  <td class="num">₹0.03L</td>
+                  <td class="num">2</td>
+                </tr>
+                <tr class="level-4">
+                  <td>
+                    <div class="row-name">
+                      Rs.10
+                    </div>
+                  </td>
+                  <td class="num">₹5.9L</td>
+                  <td class="num">393</td>
+                  <td class="num">₹0.6L</td>
+                  <td class="num">38</td>
+                  <td class="num">₹0.1L</td>
+                  <td class="num">9</td>
+                  <td class="num">₹0.01L</td>
+                  <td class="num">1</td>
+                </tr> -->
+
+                <!-- Level-3: Rings Chatpata Product Name -->
+                <tr class="level-3">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Rings Chatpata
+                    </div>
+                  </td>
+                  <td class="num">₹3.2L</td>
+                  <td class="num">213</td>
+                  <td class="num">₹0.4L</td>
+                  <td class="num">27</td>
+                  <td class="num">₹0.1L</td>
+                  <td class="num">7</td>
+                  <td class="num">₹0.01L</td>
+                  <td class="num">1</td>
+                </tr>
+
+                <!-- Level-3: Rings Sour&C&O Product Name -->
+                <tr class="level-3">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Rings Sour&C&O
+                    </div>
+                  </td>
+                  <td class="num">₹2.5L</td>
+                  <td class="num">167</td>
+                  <td class="num">₹0.3L</td>
+                  <td class="num">20</td>
+                  <td class="num">₹0.1L</td>
+                  <td class="num">7</td>
+                  <td class="num">₹0.01L</td>
+                  <td class="num">0</td>
+                </tr>
+
+
+                <!-- Level-2: Fritts Product Family -->
+                <tr class="level-2">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Fritts
+                    </div>
+                  </td>
+                  <td class="num">₹28.5L</td>
+                  <td class="num">1,900</td>
+                  <td class="num">₹2.7L</td>
+                  <td class="num">180</td>
+                  <td class="num">₹0.9L</td>
+                  <td class="num">63</td>
+                  <td class="num">₹0.10L</td>
+                  <td class="num">7</td>
+                </tr>
+
+                <!-- Level-2: Curls Product Family -->
+                <tr class="level-2">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Curls
+                    </div>
+                  </td>
+                  <td class="num">₹19.5L</td>
+                  <td class="num">1,300</td>
+                  <td class="num">₹1.9L</td>
+                  <td class="num">120</td>
+                  <td class="num">₹0.7L</td>
+                  <td class="num">43</td>
+                  <td class="num">₹0.07L</td>
+                  <td class="num">4</td>
+                </tr>
+
+                <!-- Level-1: Namkeen Category -->
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Namkeen
+                    </div>
+                  </td>
+                  <td class="num">₹14.2L</td>
+                  <td class="num">947</td>
+                  <td class="num">₹1.4L</td>
+                  <td class="num">90</td>
+                  <td class="num">₹0.5L</td>
+                  <td class="num">32</td>
+                  <td class="num">₹0.05L</td>
+                  <td class="num">4</td>
+                </tr>
+
+                <!-- Level-1: Potato Chips Category -->
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Potato Chips
+                    </div>
+                  </td>
+                  <td class="num">₹9.6L</td>
+                  <td class="num">640</td>
+                  <td class="num">₹0.9L</td>
+                  <td class="num">60</td>
+                  <td class="num">₹0.3L</td>
+                  <td class="num">21</td>
+                  <td class="num">₹0.03L</td>
+                  <td class="num">2</td>
+                </tr>
+
+                <!-- Level-0: DFM Foods Ltd-GZB -->
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM Foods Ltd-GZB</strong>
+                    </div>
+                  </td>
+                  <td class="num">₹86.5L</td>
+                  <td class="num">5,767</td>
+                  <td class="num">₹8.2L</td>
+                  <td class="num">540</td>
+                  <td class="num">₹2.9L</td>
+                  <td class="num">192</td>
+                  <td class="num">₹0.31L</td>
+                  <td class="num">20</td>
+                </tr>
+
+                <!-- Level-0: DFM FOODS LTD-KOLKATA(Plant) -->
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM FOODS LTD-KOLKATA(Plant)</strong>
+                    </div>
+                  </td>
+                  <td class="num">₹72.8L</td>
+                  <td class="num">4,853</td>
+                  <td class="num">₹6.9L</td>
+                  <td class="num">455</td>
+                  <td class="num">₹2.4L</td>
+                  <td class="num">162</td>
+                  <td class="num">₹0.26L</td>
+                  <td class="num">17</td>
+                </tr>
+
+                <!-- Total Row -->
+                <tr class="total-row">
+                  <td><strong>Total</strong></td>
+                  <td class="num"><strong>₹278.5L</strong></td>
+                  <td class="num"><strong>18,560</strong></td>
+                  <td class="num"><strong>₹26.5L</strong></td>
+                  <td class="num"><strong>1,745</strong></td>
+                  <td class="num"><strong>₹9.3L</strong></td>
+                  <td class="num"><strong>619</strong></td>
+                  <td class="num"><strong>₹0.99L</strong></td>
+                  <td class="num"><strong>65</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="visual-legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: #dff6dd"></div>
+              >50% (Healthy)
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #fff4ce"></div>
+              20-50% (Push Sales)
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #fde7e9"></div>
+              <20% (Urgent)
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #fde7e9"></div>
+              Expired (Write-off)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= CFA PERFORMANCE ======================= -->
+      <section id="cfa-section" class="dashboard-section">
+        <div class="header">
+          <div>
+            <h1>📦 CFA Performance</h1>
+            <span class="subtitle"
+              >Order Fulfillment, Stock Coverage & Aging Analysis</span
+            >
+          </div>
+          <div style="display: flex; align-items: center; gap: 16px">
+            <div class="refresh-info">
+              Last refreshed<br /><span class="time">02-Dec-2025 10:48</span>
+            </div>
+            <button class="refresh-btn">↻ Refresh</button>
+          </div>
+        </div>
+        <div class="slicers">
+          <div class="slicer">
+            <div class="slicer-label">Region</div>
+            <div class="slicer-value">All Regions</div>
+          </div>
+          <div class="slicer">
+            <div class="slicer-label">Zone</div>
+            <div class="slicer-value">All Zones</div>
+          </div>
+          <div class="slicer">
+            <div class="slicer-label">CFA</div>
+            <div class="slicer-value">All CFAs</div>
+          </div>
+          <div class="slicer">
+            <div class="slicer-label">Channel</div>
+            <div class="slicer-value">All Channels</div>
+          </div>
+          <!-- <div class="slicer">
+            <div class="slicer-label">Period</div>
+            <div class="slicer-value">MTD</div>
+          </div> -->
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-card orange">
+            <div class="kpi-label">
+              OTIF % <span class="kpi-badge mtd">Monthly</span>
+            </div>
+            <div class="kpi-value orange">86.2%</div>
+            <!-- <div class="kpi-trend down">↓ 3.8% vs target</div>
+            <div class="kpi-target">Target: 90%</div> -->
+          </div>
+          <div class="kpi-card green">
+            <div class="kpi-label">
+              Carton Fill Rate <span class="kpi-badge mtd">MTD</span>
+            </div>
+            <div class="kpi-value green">93.5%</div>
+            <!-- <div class="kpi-trend up">↑ 1.2% vs LM</div>
+            <div class="kpi-target">Target: 95%</div> -->
+          </div>
+          <div class="kpi-card green">
+            <div class="kpi-label">
+              SKU Fill Rate <span class="kpi-badge mtd">MTD</span>
+            </div>
+            <div class="kpi-value green">91.8%</div>
+            <!-- <div class="kpi-trend up">↑ 0.8% vs LM</div>
+            <div class="kpi-target">Target: 92%</div> -->
+          </div>
+          <div class="kpi-card red">
+            <div class="kpi-label">
+              BBND Cases <span class="kpi-badge live">LIVE</span>
+            </div>
+            <div class="kpi-value red">1,245</div>
+            <!-- <div class="kpi-trend down">↑ 12% from yesterday</div>
+            <div class="kpi-target">Value: ₹8.5L</div> -->
+          </div>
+          <div class="kpi-card yellow">
+            <div class="kpi-label">
+              Stock Coverage <span class="kpi-badge live">LIVE</span>
+            </div>
+            <div class="kpi-value">92%</div>
+            <!-- <div class="kpi-trend up">vs Norm</div>
+            <div class="kpi-target">Norm: 5/10/20 days</div> -->
+          </div>
+        </div>
+
+        <!-- CFA OTIF Matrix: Company → Warehouse → CFA → State → Customer -->
+        <div class="visual-card">
+          <div class="visual-header">
+            <div>
+              <span class="visual-title">CFA OTIF & Fill Rate</span
+              ><span class="hierarchy-badge"
+                >⊞ Company → Warehouse → CFA → State → Customer</span
+              >
+            </div>
+            <div class="visual-actions">
+              <button class="visual-btn" onclick="openDrillthrough('cfa-otif')">
+                📊</button
+              ><button class="visual-btn">⊞</button>
+            </div>
+          </div>
+          <div class="matrix-scroll">
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th style="min-width: 260px">
+                    Company / Warehouse / CFA / State / Customer
+                  </th>
+                  <th class="num">Orders</th>
+                  <th class="num">OTIF % FTD</th>
+                  <th class="num">OTIF % MTD</th>
+                  <th class="num">Carton Fill Rate %</th>
+                  <th class="num">SKU Fill Rate %</th>
+                  <!-- <th>Loss Reason</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button
+                      ><strong>DFM Foods Ltd- North Zone-1</strong>
+                    </div>
+                  </td>
+                  <td class="num">1,188</td>
+                  <td class="num"><span class="cf-warning">86.2%</span></td>
+                  <td class="num"><span class="cf-warning">86.2%</span></td>
+                  <td class="num"><span class="cf-good">93.5%</span></td>
+                  <td class="num"><span class="cf-good">91.8%</span></td>
+                  <!-- <td></td> -->
+                </tr>
+                
+                
+                <tr class="level-1"><td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Alipur
+                      </div>
+                    </td>
+                  <td class="num">85</td>
+                  <td class="num"><span class="cf-warning">89.2%</span></td>
+                  <td class="num"><span class="cf-warning">89.2%</span></td>
+                  <td class="num"><span class="cf-good">96.1%</span></td>
+                  <td class="num"><span class="cf-good">94.2%</span></td>
+                  <!-- <td>-</td> -->
+                </tr>
+                
+                <tr class="level-2">
+                  <td><div class="row-name">Suraj Traders</div></td>
+                  <td class="num">85</td>
+                  <td class="num"><span class="cf-warning">40.2%</span></td>
+                  <td class="num"><span class="cf-warning">40.2%</span></td>
+                  <td class="num"><span class="cf-good">50.1%</span></td>
+                  <td class="num"><span class="cf-good">34.2%</span></td>
+                  <!-- <td>-</td> -->
+                </tr>
+                <tr class="level-1">
+                  <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Jaipur
+                      </div>
+                    </td>
+                  <td class="num">85</td>
+                  <td class="num"><span class="cf-warning">49.2%</span></td>
+                  <td class="num"><span class="cf-warning">49.2%</span></td>
+                  <td class="num"><span class="cf-good">46.1%</span></td>
+                  <td class="num"><span class="cf-good">60.2%</span></td>
+                  <!-- <td>-</td> -->
+                </tr>
+                <tr class="level-1">
+                  <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Gwalior
+                      </div>
+                    </td>
+                    <td class="num">56</td>
+                  <td class="num"><span class="cf-warning">87.8%</span></td>
+                  <td class="num"><span class="cf-warning">88.2%</span></td>
+                  <td class="num"><span class="cf-good">94.3%</span></td>
+                  <td class="num"><span class="cf-good">92.8%</span></td>
+                  <!-- <td>Transit Delays</td> -->
+                </tr>
+                <tr class="level-1"><td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Bhopal
+                      </div>
+                    </td>
+                    <td class="num">67</td>
+                  <td class="num"><span class="cf-warning">87.8%</span></td>
+                  <td class="num"><span class="cf-warning">55.2%</span></td>
+                  <td class="num"><span class="cf-good">94.3%</span></td>
+                  <td class="num"><span class="cf-good">92.8%</span></td>
+                  <!-- <td>Transit Delays</td> -->
+                
+                
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM Foods Ltd- North Zone-2</strong>
+                    </div>
+                  </td>
+                  <td class="num">298</td>
+                  <td class="num"><span class="cf-warning">87.2%</span></td>
+                  <td class="num"><span class="cf-warning">43.2%</span></td>
+                  <td class="num"><span class="cf-good">93.8%</span></td>
+                  <td class="num"><span class="cf-good">91.5%</span></td>
+                  <!-- <td></td> -->
+                </tr>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM Foods Ltd- South</strong>
+                    </div>
+                  </td>
+                  <td class="num">245</td>
+                  <td class="num"><span class="cf-warning">86.0%</span></td>
+                  <td class="num"><span class="cf-warning">40.2%</span></td>
+                  <td class="num"><span class="cf-warning">92.5%</span></td>
+                  <td class="num"><span class="cf-warning">90.2%</span></td>
+                  <!-- <td></td> -->
+                </tr>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>DFM Foods Kolkata</strong>
+                    </div>
+                  </td>
+                  <td class="num">160</td>
+                  <td class="num"><span class="cf-warning">85.2%</span></td>
+                  <td class="num"><span class="cf-warning">67.2%</span></td>
+                  <td class="num"><span class="cf-good">93.0%</span></td>
+                  <td class="num"><span class="cf-good">91.0%</span></td>
+                  <!-- <td></td> -->
+                </tr>
+                <tr class="total-row">
+                  <td><strong>Total</strong></td>
+                  <td class="num"><strong>1,188</strong></td>
+                  <td class="num"><strong>86.2%</strong></td>
+                  <td class="num"><strong>56.8%</strong></td>
+                  <td class="num"><strong>93.5%</strong></td>
+                  <td class="num"><strong>91.8%</strong></td>
+                  <!-- <td></td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box">
+            <strong>💡 Clickthrough:</strong> OTIF Loss → Stock NA (45%) |
+            Warehouse Delays (30%) | Transit Delays (25%)
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Stock Coverage: Region → Zone → CFA → SKU -->
+          <div class="visual-card">
+            <div class="visual-header">
+              <div>
+                <span class="visual-title">Stock Coverage vs Norm</span
+                ><span class="hierarchy-badge"
+                  >⊞ Region → Zone → CFA → SKU</span
+                >
+              </div>
+            </div>
+            <div class="matrix-scroll" style="max-height: 300px">
+              <table class="matrix">
+                <thead>
+                  <tr>
+                    <th style="min-width: 220px">Region / Zone / CFA / SKU</th>
+                    <th class="num">Norm</th>
+                    <th class="num">Actual</th>
+                    <th class="num">Coverage</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button
+                        ><strong>NZ-4</strong>
+                      </div>
+                    </td>
+                    <td class="num">-</td>
+                    <td class="num">-</td>
+                    <td class="num"><span class="cf-good">94%</span></td>
+                    <td>
+                      <span class="status"
+                        ><span class="status-dot green"></span>Healthy</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>CFA-BAREILLY
+                      </div>
+                    </td>
+                    <td class="num">-</td>
+                    <td class="num">-</td>
+                    <td class="num"><span class="cf-good">96%</span></td>
+                    <td>
+                      <span class="status"
+                        ><span class="status-dot green"></span>Healthy</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="level-2">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Small Pack
+                      </div>
+                    </td>
+                    <td class="num">-</td>
+                    <td class="num">-</td>
+                    <td class="num"><span class="cf-good">97%</span></td>
+                    <td>
+                      <span class="status"
+                        ><span class="status-dot green"></span>Healthy</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="level-3">
+                    <td><div class="row-name">Rings Rs.5</div></td>
+                    <td class="num">5 days</td>
+                    <td class="num">5.2</td>
+                    <td class="num"><span class="cf-good">104%</span></td>
+                    <td>
+                      <span class="status"
+                        ><span class="status-dot green"></span>Healthy</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="level-3">
+                    <td><div class="row-name">Fritts Rs.5</div></td>
+                    <td class="num">5 days</td>
+                    <td class="num">3.8</td>
+                    <td class="num"><span class="cf-bad">76%</span></td>
+                    <td>
+                      <span class="status"
+                        ><span class="status-dot red"></span>Critical</span
+                      >
+                    </td>
+                  </tr>
+                  
+                  </tr>
+                  <tr class="level-2">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Large Pack
+                      </div>
+                    </td>
+                    <td class="num">-</td>
+                    <td class="num">-</td>
+                    <td class="num"><span class="cf-good">95%</span></td>
+                    <td>
+                      <span class="status"
+                        ><span class="status-dot green"></span>Healthy</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>CFA-AGRA
+                      </div>
+                    </td>
+                    <td class="num">-</td>
+                    <td class="num">-</td>
+                    <td class="num"><span class="cf-warning">89%</span></td>
+                    <td>
+                      <span class="status"
+                        ><span class="status-dot yellow"></span>Low</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>NZ-2</strong>
+                      </div>
+                    </td>
+                    <td class="num">-</td>
+                    <td class="num">-</td>
+                    <td class="num"><span class="cf-warning">89%</span></td>
+                    <td>
+                      <span class="status"
+                        ><span class="status-dot yellow"></span>Low</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>NZ-4</strong>
+                      </div>
+                    </td>
+                    <td class="num">-</td>
+                    <td class="num">-</td>
+                    <td class="num"><span class="cf-good">92%</span></td>
+                    <td>
+                      <span class="status"
+                        ><span class="status-dot green"></span>Healthy</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>NZ-3</strong>
+                      </div>
+                    </td>
+                    <td class="num">-</td>
+                    <td class="num">-</td>
+                    <td class="num"><span class="cf-good">91%</span></td>
+                    <td>
+                      <span class="status"
+                        ><span class="status-dot green"></span>Healthy</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- BBND: Region → Zone → CFA → SKU -->
+          <div class="visual-card">
+            <div class="visual-header">
+              <div>
+                <span class="visual-title"
+                  >BBND (Billed But Not Dispatched)</span
+                ><span class="hierarchy-badge"
+                  >⊞ Region → Zone → CFA → SKU</span
+                >
+              </div>
+            </div>
+            <div class="matrix-scroll" style="max-height: 300px">
+              <table class="matrix">
+                <thead>
+                  <tr>
+                    <th style="min-width: 200px">Region / Zone / CFA / SKU</th>
+                    <th class="num">Cases</th>
+                    <th class="num">Value</th>
+                    <th class="num">Age</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button
+                        ><strong>NZ-1</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">520</span></td>
+                    <td class="num">₹3.54L</td>
+                    <td class="num">-</td>
+                  </tr>
+                  <!-- <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Delhi Zone
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">285</span></td>
+                    <td class="num">₹1.94L</td>
+                    <td class="num">-</td>
+                  </tr> -->
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>CFA-AGRA
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-bad">165</span></td>
+                    <td class="num">₹1.12L</td>
+                    <td class="num">-</td>
+                  </tr>
+                  <tr class="level-2"><td>
+                      <div class="row-name">
+                        <button class="expand-btn">−</button>Alipur
+                      </div>
+                    </td>
+                  <td class="num"><span class="cf-bad">165</span></td>
+                    <td class="num">₹1.12L</td>
+                  <!-- <td>-</td> -->
+                </tr>
+                
+                <tr class="level-3">
+                  <td><div class="row-name">Suraj Traders</div></td>
+                  
+                  <td class="num"><span class="cf-bad">165</span></td>
+                    <td class="num">₹1.12L</td>
+                  <!-- <td>-</td> -->
+                </tr>
+                  <!-- <tr class="level-2">
+                    <td><div class="row-name">Rings Tangy Tomato Rs.5</div></td>
+                    <td class="num"><span class="cf-bad">75</span></td>
+                    <td class="num">₹0.51L</td>
+                    <td class="num"><span class="cf-bad">5 days</span></td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Choco Chips 150g</div></td>
+                    <td class="num"><span class="cf-warning">52</span></td>
+                    <td class="num">₹0.35L</td>
+                    <td class="num"><span class="cf-warning">3 days</span></td>
+                  </tr>
+                  <tr class="level-2">
+                    <td><div class="row-name">Salted Snacks 100g</div></td>
+                    <td class="num"><span class="cf-warning">38</span></td>
+                    <td class="num">₹0.26L</td>
+                    <td class="num"><span class="cf-warning">2 days</span></td>
+                  </tr> -->
+                  <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>CFA-BAREILLY
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">72</span></td>
+                    <td class="num">₹0.49L</td>
+                    <td class="num">-</td>
+                  </tr>
+                  <!-- <tr class="level-1">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button>Punjab Zone
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">145</span></td>
+                    <td class="num">₹0.98L</td>
+                    <td class="num">-</td> -->
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>NZ-2</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">425</span></td>
+                    <td class="num">₹2.89L</td>
+                    <td class="num">-</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>NZ-4</strong>
+                      </div>
+                    </td>
+                    <td class="num"><span class="cf-warning">200</span></td>
+                    <td class="num">₹1.36L</td>
+                    <td class="num">-</td>
+                  </tr>
+                  <tr class="level-0">
+                    <td>
+                      <div class="row-name">
+                        <button class="expand-btn">+</button
+                        ><strong>NZ-3</strong>
+                      </div>
+                    </td>
+                    <td class="num">100</td>
+                    <td class="num">₹0.71L</td>
+                    <td class="num">-</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td><strong>Total</strong></td>
+                    <td class="num"><strong>1,245</strong></td>
+                    <td class="num"><strong>₹8.5L</strong></td>
+                    <td>-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- FG Stock Age - Age buckets as columns -->
+        <div class="visual-card">
+          <div class="visual-header">
+            <div>
+              <span class="visual-title">FG Stock Age (CFA)</span
+              ><span class="hierarchy-badge">⊞ Plant → Line → SKU</span>
+            </div>
+          </div>
+          <div class="matrix-scroll">
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="min-width: 220px; vertical-align: middle;">Company / Line / Shelf Life</th>
+                  <th colspan="2" class="num green-head">>50% Shelf Life</th>
+                  <th colspan="2" class="num yellow-head">20-50% Shelf Life</th>
+                  <th colspan="2" class="num red-head"><20% Shelf Life</th>
+                  <th colspan="2" class="num red-head">Expired</th>
+                </tr>
+                <tr>
+                  <th class="num">Value (₹L)</th>
+                  <th class="num">Volume</th>
+                  <th class="num">Value (₹L)</th>
+                  <th class="num">Volume</th>
+                  <th class="num">Value (₹L)</th>
+                  <th class="num">Volume</th>
+                  <th class="num">Value (₹L)</th>
+                  <th class="num">Volume</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Level-0: DFM Foods Ltd- G.Noida Plant -->
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button
+                      ><strong>NZ-4</strong>
+                    </div>
+                  </td>
+                  <td class="num">₹119.2L</td>
+                  <td class="num">7,940</td>
+                  <td class="num">₹11.4L</td>
+                  <td class="num">750</td>
+                  <td class="num">₹4.0L</td>
+                  <td class="num">265</td>
+                  <td class="num">₹0.42L</td>
+                  <td class="num">28</td>
+                </tr>
+
+                <!-- Level-1: Extruded Category -->
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>CFA-GAZIABAD2
+                    </div>
+                  </td>
+                  <td class="num">₹95.4L</td>
+                  <td class="num">6,360</td>
+                  <td class="num">₹9.1L</td>
+                  <td class="num">600</td>
+                  <td class="num">₹3.2L</td>
+                  <td class="num">212</td>
+                  <td class="num">₹0.34L</td>
+                  <td class="num">22</td>
+                </tr>
+
+                <!-- Level-2: Rings Product Family -->
+                <tr class="level-2">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Rings
+                    </div>
+                  </td>
+                  <td class="num">₹47.4L</td>
+                  <td class="num">3,160</td>
+                  <td class="num">₹4.5L</td>
+                  <td class="num">300</td>
+                  <td class="num">₹1.6L</td>
+                  <td class="num">106</td>
+                  <td class="num">₹0.17L</td>
+                  <td class="num">11</td>
+                </tr>
+
+                <!-- Level-3: Rings Tangy Tomato Product Name -->
+                <!-- <tr class="level-3">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Rings Tangy Tomato
+                    </div>
+                  </td>
+                  <td class="num">₹23.7L</td>
+                  <td class="num">1,580</td>
+                  <td class="num">₹2.0L</td>
+                  <td class="num">130</td>
+                  <td class="num">₹0.8L</td>
+                  <td class="num">55</td>
+                  <td class="num">₹0.09L</td>
+                  <td class="num">6</td>
+                </tr> -->
+
+                <!-- Level-4: Pack Sizes for Rings Tangy Tomato -->
+                <tr class="level-3">
+                  <td>
+                    <div class="row-name">
+                      Rs.5
+                    </div>
+                  </td>
+                  <td class="num">₹7.8L</td>
+                  <td class="num">520</td>
+                  <td class="num">₹0.7L</td>
+                  <td class="num">45</td>
+                  <td class="num">₹0.3L</td>
+                  <td class="num">18</td>
+                  <td class="num">₹0.03L</td>
+                  <td class="num">2</td>
+                </tr>
+                <tr class="level-3">
+                  <td>
+                    <div class="row-name">
+                      Rs.10
+                    </div>
+                  </td>
+                  <td class="num">₹6.3L</td>
+                  <td class="num">420</td>
+                  <td class="num">₹0.6L</td>
+                  <td class="num">38</td>
+                  <td class="num">₹0.2L</td>
+                  <td class="num">15</td>
+                  <td class="num">₹0.03L</td>
+                  <td class="num">2</td>
+                </tr>
+                <!-- <tr class="level-4">
+                  <td>
+                    <div class="row-name">
+                      Rs.25
+                    </div>
+                  </td>
+                  <td class="num">₹5.1L</td>
+                  <td class="num">340</td>
+                  <td class="num">₹0.5L</td>
+                  <td class="num">37</td>
+                  <td class="num">₹0.2L</td>
+                  <td class="num">12</td>
+                  <td class="num">₹0.02L</td>
+                  <td class="num">1</td>
+                </tr>
+                <tr class="level-4">
+                  <td>
+                    <div class="row-name">
+                      Rs.20
+                    </div>
+                  </td>
+                  <td class="num">₹4.5L</td>
+                  <td class="num">300</td>
+                  <td class="num">₹0.5L</td>
+                  <td class="num">30</td>
+                  <td class="num">₹0.1L</td>
+                  <td class="num">10</td>
+                  <td class="num">₹0.01L</td>
+                  <td class="num">1</td>
+                </tr> -->
+
+                <!-- Level-3: Rings Masala Mania Product Name -->
+                <!-- <tr class="level-3">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Rings Masala Mania
+                    </div>
+                  </td>
+                  <td class="num">₹13.7L</td>
+                  <td class="num">913</td>
+                  <td class="num">₹1.3L</td>
+                  <td class="num">83</td>
+                  <td class="num">₹0.4L</td>
+                  <td class="num">27</td>
+                  <td class="num">₹0.04L</td>
+                  <td class="num">3</td>
+                </tr>
+
+                
+                <tr class="level-4">
+                  <td>
+                    <div class="row-name">
+                      Rs.5
+                    </div>
+                  </td>
+                  <td class="num">₹7.8L</td>
+                  <td class="num">520</td>
+                  <td class="num">₹0.7L</td>
+                  <td class="num">45</td>
+                  <td class="num">₹0.3L</td>
+                  <td class="num">18</td>
+                  <td class="num">₹0.03L</td>
+                  <td class="num">2</td>
+                </tr>
+                <tr class="level-4">
+                  <td>
+                    <div class="row-name">
+                      Rs.10
+                    </div>
+                  </td>
+                  <td class="num">₹5.9L</td>
+                  <td class="num">393</td>
+                  <td class="num">₹0.6L</td>
+                  <td class="num">38</td>
+                  <td class="num">₹0.1L</td>
+                  <td class="num">9</td>
+                  <td class="num">₹0.01L</td>
+                  <td class="num">1</td>
+                </tr> -->
+
+                <!-- Level-3: Rings Chatpata Product Name -->
+                <tr class="level-2">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Fritts
+                    </div>
+                  </td>
+                  <td class="num">₹3.2L</td>
+                  <td class="num">213</td>
+                  <td class="num">₹0.4L</td>
+                  <td class="num">27</td>
+                  <td class="num">₹0.1L</td>
+                  <td class="num">7</td>
+                  <td class="num">₹0.01L</td>
+                  <td class="num">1</td>
+                </tr>
+
+                <!-- Level-3: Rings Sour&C&O Product Name -->
+                <tr class="level-2">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Potato Chips
+                    </div>
+                  </td>
+                  <td class="num">₹2.5L</td>
+                  <td class="num">167</td>
+                  <td class="num">₹0.3L</td>
+                  <td class="num">20</td>
+                  <td class="num">₹0.1L</td>
+                  <td class="num">7</td>
+                  <td class="num">₹0.01L</td>
+                  <td class="num">0</td>
+                </tr>
+
+                <!-- Level-2: Curls Product Family -->
+                <tr class="level-2">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Curls
+                    </div>
+                  </td>
+                  <td class="num">₹19.5L</td>
+                  <td class="num">1,300</td>
+                  <td class="num">₹1.9L</td>
+                  <td class="num">120</td>
+                  <td class="num">₹0.7L</td>
+                  <td class="num">43</td>
+                  <td class="num">₹0.07L</td>
+                  <td class="num">4</td>
+                </tr>
+
+                <!-- Level-1: Namkeen Category -->
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>CFA-HALDWANI
+                    </div>
+                  </td>
+                  <td class="num">₹14.2L</td>
+                  <td class="num">947</td>
+                  <td class="num">₹1.4L</td>
+                  <td class="num">90</td>
+                  <td class="num">₹0.5L</td>
+                  <td class="num">32</td>
+                  <td class="num">₹0.05L</td>
+                  <td class="num">4</td>
+                </tr>
+
+                <!-- Level-1: Potato Chips Category -->
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>CFA-DEHRADUN
+                    </div>
+                  </td>
+                  <td class="num">₹9.6L</td>
+                  <td class="num">640</td>
+                  <td class="num">₹0.9L</td>
+                  <td class="num">60</td>
+                  <td class="num">₹0.3L</td>
+                  <td class="num">21</td>
+                  <td class="num">₹0.03L</td>
+                  <td class="num">2</td>
+                </tr>
+
+                <!-- Level-0: DFM Foods Ltd-GZB -->
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>NZ-2</strong>
+                    </div>
+                  </td>
+                  <td class="num">₹86.5L</td>
+                  <td class="num">5,767</td>
+                  <td class="num">₹8.2L</td>
+                  <td class="num">540</td>
+                  <td class="num">₹2.9L</td>
+                  <td class="num">192</td>
+                  <td class="num">₹0.31L</td>
+                  <td class="num">20</td>
+                </tr>
+
+                <!-- Level-0: DFM FOODS LTD-KOLKATA(Plant) -->
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>NZ-5</strong>
+                    </div>
+                  </td>
+                  <td class="num">₹72.8L</td>
+                  <td class="num">4,853</td>
+                  <td class="num">₹6.9L</td>
+                  <td class="num">455</td>
+                  <td class="num">₹2.4L</td>
+                  <td class="num">162</td>
+                  <td class="num">₹0.26L</td>
+                  <td class="num">17</td>
+                </tr>
+
+                <!-- Total Row -->
+                <tr class="total-row">
+                  <td><strong>Total</strong></td>
+                  <td class="num"><strong>₹278.5L</strong></td>
+                  <td class="num"><strong>18,560</strong></td>
+                  <td class="num"><strong>₹26.5L</strong></td>
+                  <td class="num"><strong>1,745</strong></td>
+                  <td class="num"><strong>₹9.3L</strong></td>
+                  <td class="num"><strong>619</strong></td>
+                  <td class="num"><strong>₹0.99L</strong></td>
+                  <td class="num"><strong>65</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+        </div>
+        
+        <!-- FG Stock Age CFA - Age buckets as columns -->
+        <!-- <div class="visual-card">
+          <div class="visual-header">
+            <div>
+              <span class="visual-title">FG Stock Age (CFA)</span
+              ><span class="hierarchy-badge">⊞ Region → Zone → CFA → SKU</span>
+            </div>
+          </div>
+          <div class="matrix-scroll">
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th style="min-width: 240px">Region / Zone / CFA / SKU</th>
+                  <th class="num">Shelf Life</th>
+                  <th class="num">Value (₹L)</th>
+                  <th class="num">Volume (Cases)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button
+                      ><strong>NZ-1</strong>
+                    </div>
+                  </td>
+                  <td class="num">-</td>
+                  <td class="num">₹178.2L</td>
+                  <td class="num">24,580</td>
+                </tr>
+                <!-- <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Delhi Zone
+                    </div>
+                  </td>
+                  <td class="num"><span class="cf-good">9,820</span></td>
+                  <td class="num"><span class="cf-warning">1,850</span></td>
+                  <td class="num"><span class="cf-bad">620</span></td>
+                  <td class="num"><span class="cf-bad">160</span></td>
+                  <td class="num"><strong>12,450</strong></td>
+                </tr> -->
+                <!-- <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">−</button>Delhi CFA
+                    </div>
+                  </td>
+                  <td class="num">-</td>
+                  <td class="num">₹49.3L</td>
+                  <td class="num">6,850</td>
+                </tr>
+                <tr class="level-2">
+                  <td><div class="row-name">Rings Tangy Tomato Rs.5</div></td>
+                  <td class="num"><span class="cf-good">>50%</span></td>
+                  <td class="num">₹16.8L</td>
+                  <td class="num">2,325</td>
+                </tr>
+                <tr class="level-2">
+                  <td><div class="row-name">Rings Masala Mania Rs.5</div></td>
+                  <td class="num"><span class="cf-good">>50%</span></td>
+                  <td class="num">₹13.9L</td>
+                  <td class="num">1,931</td>
+                </tr>
+                <tr class="level-2">
+                  <td><div class="row-name">Rings Thai Sweet Chilli Rs.5</div></td>
+                  <td class="num"><span class="cf-warning">20-50%</span></td>
+                  <td class="num">₹11.8L</td>
+                  <td class="num">1,632</td>
+                </tr>
+                <tr class="level-2">
+                  <td><div class="row-name">Salted Snacks 100g</div></td>
+                  <td class="num"><span class="cf-good">>50%</span></td>
+                  <td class="num">₹6.9L</td>
+                  <td class="num">962</td>
+                </tr>
+                
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Gurgaon CFA
+                    </div>
+                  </td>
+                  <td class="num">-</td>
+                  <td class="num">₹23.4L</td>
+                  <td class="num">3,250</td>
+                </tr>
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Noida CFA
+                    </div>
+                  </td>
+                  <td class="num">-</td>
+                  <td class="num">₹16.9L</td>
+                  <td class="num">2,350</td>
+                </tr>
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>Punjab Zone
+                    </div>
+                  </td>
+                  <td class="num">-</td>
+                  <td class="num">₹47.8L</td>
+                  <td class="num">6,580</td>
+                </tr>
+                <tr class="level-1">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button>UP Zone
+                    </div>
+                  </td>
+                  <td class="num">-</td>
+                  <td class="num">₹40.8L</td>
+                  <td class="num">5,550</td>
+                </tr>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>NZ-2</strong>
+                    </div>
+                  </td>
+                  <td class="num">-</td>
+                  <td class="num">₹134.5L</td>
+                  <td class="num">18,450</td>
+                </tr>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>NZ-4</strong>
+                    </div>
+                  </td>
+                  <td class="num">-</td>
+                  <td class="num">₹69.6L</td>
+                  <td class="num">9,550</td>
+                </tr>
+                <tr class="level-0">
+                  <td>
+                    <div class="row-name">
+                      <button class="expand-btn">+</button
+                      ><strong>NZ-3</strong>
+                    </div>
+                  </td>
+                  <td class="num">-</td>
+                  <td class="num">₹35.5L</td>
+                  <td class="num">5,000</td>
+                </tr>
+                <tr class="total-row">
+                  <td><strong>Total</strong></td>
+                  <td class="num"><strong>-</strong></td>
+                  <td class="num"><strong>₹417.8L</strong></td>
+                  <td class="num"><strong>57,580</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div> --> 
+          <div class="visual-legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: #dff6dd"></div>
+              >50% (Healthy)
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #fff4ce"></div>
+              20-50% (Push Sales)
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #fde7e9"></div>
+              <20% (Urgent)
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #fde7e9"></div>
+              Expired (Write-off)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================= PAYMENT PERFORMANCE ======================= -->
+      <section id="payment-section" class="dashboard-section">
+        <div class="header">
+          <div>
+            <h1>💳 Payment Performance</h1>
+            <span class="subtitle"
+              >Supplier Payment Tracking & Overdue Analysis</span
+            >
+          </div>
+        </div>
+
+        <div class="slicers">
+          <div class="slicer">
+            <div class="slicer-label">Company</div>
+            <div class="slicer-value">All</div>
+          </div>
+          <div class="slicer">
+            <div class="slicer-label">Supplier</div>
+            <div class="slicer-value">All Suppliers</div>
+          </div>
+          <div class="slicer">
+            <div class="slicer-label">As On Date</div>
+            <div class="slicer-value">02-Dec-2025</div>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card red">
+            <div class="kpi-label">
+              Total Overdue Invoices <span class="kpi-badge live">LIVE</span>
+            </div>
+            <div class="kpi-value red">156</div>
+            <!-- <div class="kpi-trend down">↑ 12 from last week</div> -->
+          </div>
+          <div class="kpi-card red">
+            <div class="kpi-label">
+              Overdue Value <span class="kpi-badge live">LIVE</span>
+            </div>
+            <div class="kpi-value red">₹45.2L</div>
+            <!-- <div class="kpi-trend down">↑ ₹8.5L from last week</div> -->
+          </div>
+          <div class="kpi-card orange">
+            <div class="kpi-label">
+              Avg Days Overdue <span class="kpi-badge live">LIVE</span>
+            </div>
+            <div class="kpi-value orange">12.5</div>
+            <!-- <div class="kpi-target">days past due date</div> -->
+          </div>
+          <div class="kpi-card orange">
+            <div class="kpi-label">
+              On-Time Payment % <span class="kpi-badge mtd">MTD</span>
+            </div>
+            <div class="kpi-value orange">82.3%</div>
+            <!-- <div class="kpi-trend down">↓ 5.2% vs target</div>
+            <div class="kpi-target">Target: 95%</div> -->
+          </div>
+          <div class="kpi-card yellow">
+            <div class="kpi-label">
+              Oldest Invoice <span class="kpi-badge live">LIVE</span>
+            </div>
+            <div class="kpi-value">28</div>
+            <!-- <div class="kpi-target">days overdue</div> -->
+          </div>
+        </div>
+
+        <!-- Supplier Payments Outside Norms -->
+        <div class="visual-card">
+          <div class="visual-header">
+            <div>
+              <span class="visual-title">Supplier Payments Outside Norms</span
+              ><span class="hierarchy-badge">⊞ Company → Supplier</span>
+            </div>
+          </div>
+          <div class="matrix-scroll">
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th style="min-width: 240px">Company / Supplier</th>
+                  <th class="num"># Invoices</th>
+                  <th class="num">Overdue Amount (₹L)</th>
+                  <th class="num">Avg Days Overdue</th>
+                  <th class="num">Oldest Invoice</th>
+                  <th class="num">Aging Bucket</th>
+                  <th class="num">% of Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="level-0" data-parent="head-office">
+                  <td>
+                    <div class="row-name">
+                      <button
+                        class="expand-btn"
+                        onclick="toggleExpand('head-office')">
+                        −</button
+                      ><strong>Head Office</strong>
+                    </div>
+                  </td>
+                  <td class="num"><span class="cf-bad">68</span></td>
+                  <td class="num data-bar-cell">
+                    <div
+                      class="data-bar"
+                      style="width: 50%; background: var(--red)"></div>
+                    <span class="data-bar-value">22.4</span>
+                  </td>
+                  <td class="num"><span class="cf-bad">14.2</span></td>
+                  <td class="num">28 days</td>
+                  <td class="num">8-21 days</td>
+                  <td class="num">49.6%</td>
+                </tr>
+                <tr class="level-1 expanded" data-child="head-office">
+                  <td><div class="row-name">ABC Packaging Ltd</div></td>
+                  <td class="num"><span class="cf-warning">23</span></td>
+                  <td class="num">8.5</td>
+                  <td class="num">12.5</td>
+                  <td class="num">21 days</td>
+                  <td class="num">8-14 days</td>
+                  <td class="num">18.8%</td>
+                </tr>
+                <tr class="level-1 expanded" data-child="head-office">
+                  <td><div class="row-name">XYZ Raw Materials</div></td>
+                  <td class="num"><span class="cf-warning">18</span></td>
+                  <td class="num">6.2</td>
+                  <td class="num"><span class="cf-bad">15.8</span></td>
+                  <td class="num"><span class="cf-bad">28 days</span></td>
+                  <td class="num"><span class="cf-bad">>21 days</span></td>
+                  <td class="num">13.7%</td>
+                </tr>
+                <tr class="level-1 expanded" data-child="head-office">
+                  <td><div class="row-name">PQR Ingredients</div></td>
+                  <td class="num">15</td>
+                  <td class="num">4.8</td>
+                  <td class="num">10.2</td>
+                  <td class="num">18 days</td>
+                  <td class="num">15-21 days</td>
+                  <td class="num">10.6%</td>
+                </tr>
+                <tr class="level-1 expanded" data-child="head-office">
+                  <td><div class="row-name">LMN Foods Supply</div></td>
+                  <td class="num">12</td>
+                  <td class="num">2.9</td>
+                  <td class="num">9.5</td>
+                  <td class="num">15 days</td>
+                  <td class="num">8-14 days</td>
+                  <td class="num">6.4%</td>
+                </tr>
+                <tr class="level-0" data-parent="gn-plant-pay">
+                  <td>
+                    <div class="row-name">
+                      <button
+                        class="expand-btn"
+                        onclick="toggleExpand('gn-plant-pay')">
+                        +</button
+                      ><strong>DFM Foods Ltd- G.Noida Plant</strong>
+                    </div>
+                  </td>
+                  <td class="num"><span class="cf-warning">45</span></td>
+                  <td class="num data-bar-cell">
+                    <div
+                      class="data-bar"
+                      style="width: 28%; background: var(--orange)"></div>
+                    <span class="data-bar-value">12.8</span>
+                  </td>
+                  <td class="num">11.5</td>
+                  <td class="num">22 days</td>
+                  <td class="num">8-21 days</td>
+                  <td class="num">28.3%</td>
+                </tr>
+                <tr class="level-1" data-child="gn-plant-pay">
+                  <td><div class="row-name">Sugar Suppliers Co.</div></td>
+                  <td class="num">18</td>
+                  <td class="num">5.2</td>
+                  <td class="num">13.5</td>
+                  <td class="num">22 days</td>
+                  <td class="num">8-14 days</td>
+                  <td class="num">11.5%</td>
+                </tr>
+                <tr class="level-1" data-child="gn-plant-pay">
+                  <td><div class="row-name">Flour Mills Ltd</div></td>
+                  <td class="num">15</td>
+                  <td class="num">4.5</td>
+                  <td class="num">10.8</td>
+                  <td class="num">18 days</td>
+                  <td class="num">8-14 days</td>
+                  <td class="num">10.0%</td>
+                </tr>
+                <tr class="level-1" data-child="gn-plant-pay">
+                  <td><div class="row-name">Edible Oil Traders</div></td>
+                  <td class="num">12</td>
+                  <td class="num">3.1</td>
+                  <td class="num">9.2</td>
+                  <td class="num">14 days</td>
+                  <td class="num">8-14 days</td>
+                  <td class="num">6.9%</td>
+                </tr>
+                <tr class="level-0" data-parent="DFM Foods Ltd-GZB-plant-pay">
+                  <td>
+                    <div class="row-name">
+                      <button
+                        class="expand-btn"
+                        onclick="toggleExpand('DFM Foods Ltd-GZB-plant-pay')">
+                        +</button
+                      ><strong>DFM Foods Ltd-GZB</strong>
+                    </div>
+                  </td>
+                  <td class="num"><span class="cf-warning">28</span></td>
+                  <td class="num data-bar-cell">
+                    <div
+                      class="data-bar"
+                      style="width: 14%; background: var(--orange)"></div>
+                    <span class="data-bar-value">6.5</span>
+                  </td>
+                  <td class="num">9.8</td>
+                  <td class="num">18 days</td>
+                  <td class="num">8-14 days</td>
+                  <td class="num">14.4%</td>
+                </tr>
+                <tr class="level-1" data-child="DFM Foods Ltd-GZB-plant-pay">
+                  <td><div class="row-name">Seasoning Suppliers</div></td>
+                  <td class="num">12</td>
+                  <td class="num">2.8</td>
+                  <td class="num">11.2</td>
+                  <td class="num">18 days</td>
+                  <td class="num">8-14 days</td>
+                  <td class="num">6.2%</td>
+                </tr>
+                <tr class="level-1" data-child="DFM Foods Ltd-GZB-plant-pay">
+                  <td><div class="row-name">Packaging Materials Inc</div></td>
+                  <td class="num">10</td>
+                  <td class="num">2.4</td>
+                  <td class="num">9.5</td>
+                  <td class="num">15 days</td>
+                  <td class="num">8-14 days</td>
+                  <td class="num">5.3%</td>
+                </tr>
+                <tr class="level-1" data-child="DFM Foods Ltd-GZB-plant-pay">
+                  <td><div class="row-name">Potato Suppliers</div></td>
+                  <td class="num">6</td>
+                  <td class="num">1.3</td>
+                  <td class="num">7.8</td>
+                  <td class="num">12 days</td>
+                  <td class="num">1-7 days</td>
+                  <td class="num">2.9%</td>
+                </tr>
+                <tr class="level-0" data-parent="cfa-payments">
+                  <td>
+                    <div class="row-name">
+                      <button
+                        class="expand-btn"
+                        onclick="toggleExpand('cfa-payments')">
+                        +</button
+                      ><strong>CFA Payments</strong>
+                    </div>
+                  </td>
+                  <td class="num">15</td>
+                  <td class="num data-bar-cell">
+                    <div
+                      class="data-bar"
+                      style="width: 8%; background: var(--accent)"></div>
+                    <span class="data-bar-value">3.5</span>
+                  </td>
+                  <td class="num">7.2</td>
+                  <td class="num">12 days</td>
+                  <td class="num">1-7 days</td>
+                  <td class="num">7.7%</td>
+                </tr>
+                <tr class="level-1" data-child="cfa-payments">
+                  <td><div class="row-name">Logistics Partners</div></td>
+                  <td class="num">8</td>
+                  <td class="num">1.8</td>
+                  <td class="num">8.5</td>
+                  <td class="num">12 days</td>
+                  <td class="num">8-14 days</td>
+                  <td class="num">4.0%</td>
+                </tr>
+                <tr class="level-1" data-child="cfa-payments">
+                  <td><div class="row-name">Warehouse Services</div></td>
+                  <td class="num">7</td>
+                  <td class="num">1.7</td>
+                  <td class="num">6.2</td>
+                  <td class="num">10 days</td>
+                  <td class="num">1-7 days</td>
+                  <td class="num">3.8%</td>
+                </tr>
+                <tr class="total-row">
+                  <td><strong>Total</strong></td>
+                  <td class="num"><strong>156</strong></td>
+                  <td class="num"><strong>45.2</strong></td>
+                  <td class="num"><strong>12.5</strong></td>
+                  <td class="num"><strong>28 days</strong></td>
+                  <td class="num"><strong>-</strong></td>
+                  <td class="num"><strong>100%</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="visual-legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: #fde7e9"></div>
+              &gt;20 days overdue
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #fff4ce"></div>
+              10-20 days overdue
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #deecf9"></div>
+              &lt;10 days overdue
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Aging Buckets -->
+        <!-- <div class="visual-card">
+          <div class="visual-header">
+            <span class="visual-title">Payment Aging Buckets</span>
+          </div>
+          <div style="padding: 16px">
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th>Aging Bucket</th>
+                  <th class="num"># Invoices</th>
+                  <th class="num">Amount (₹L)</th>
+                  <th class="num">% of Total</th>
+                  <th>Priority</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1-7 Days Overdue</td>
+                  <td class="num">42</td>
+                  <td class="num">8.5</td>
+                  <td class="num">18.8%</td>
+                  <td>
+                    <span class="status"
+                      ><span class="status-dot blue"></span>Low</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>8-14 Days Overdue</td>
+                  <td class="num"><span class="cf-warning">58</span></td>
+                  <td class="num">15.2</td>
+                  <td class="num"><span class="cf-warning">33.6%</span></td>
+                  <td>
+                    <span class="status"
+                      ><span class="status-dot yellow"></span>Medium</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>15-21 Days Overdue</td>
+                  <td class="num"><span class="cf-bad">35</span></td>
+                  <td class="num">12.8</td>
+                  <td class="num"><span class="cf-bad">28.3%</span></td>
+                  <td>
+                    <span class="status"
+                      ><span class="status-dot red"></span>High</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>&gt;21 Days Overdue</td>
+                  <td class="num"><span class="cf-bad">21</span></td>
+                  <td class="num">8.7</td>
+                  <td class="num"><span class="cf-bad">19.2%</span></td>
+                  <td>
+                    <span class="status"
+                      ><span class="status-dot red"></span>Critical</span
+                    >
+                  </td>
+                </tr>
+                <tr class="total-row">
+                  <td><strong>Total</strong></td>
+                  <td class="num"><strong>156</strong></td>
+                  <td class="num"><strong>45.2</strong></td>
+                  <td class="num"><strong>100%</strong></td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div> 
+        </div> -->
+      </section>
+    </div>
+
+    <script>
+      function showPage(pageId) {
+        // Remove active class from all sections
+        document
+          .querySelectorAll(".dashboard-section")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(pageId + "-section").classList.add("active");
+
+        // Remove active class from all tabs
+        document
+          .querySelectorAll(".top-tab")
+          .forEach((t) => t.classList.remove("active"));
+        event.target.classList.add("active");
+      }
+
+      function toggleExpand(parentId) {
+        const children = document.querySelectorAll(
+          `[data-child="${parentId}"]`
+        );
+        const button = event.target;
+
+        if (children.length === 0) return;
+
+        if (button.textContent === "+") {
+          button.textContent = "−";
+          children.forEach((child) => child.classList.add("expanded"));
+        } else {
+          button.textContent = "+";
+          children.forEach((child) => {
+            child.classList.remove("expanded");
+            // Collapse any nested children too
+            const nestedBtn = child.querySelector(".expand-btn");
+            if (nestedBtn && nestedBtn.textContent === "−") {
+              nestedBtn.textContent = "+";
+              const nestedParent = child.getAttribute("data-parent");
+              if (nestedParent) {
+                const nestedChildren = document.querySelectorAll(
+                  `[data-child="${nestedParent}"]`
+                );
+                nestedChildren.forEach((nc) => nc.classList.remove("expanded"));
+              }
+            }
+          });
+        }
+      }
+
+      // Toggle row visibility for hierarchical tables
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.expand-btn').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const isExpanded = this.textContent === '−';
+            this.textContent = isExpanded ? '+' : '−';
+
+            const row = this.closest('tr');
+            const level = parseInt([...row.classList].find(c => c.startsWith('level-')).split('-')[1]);
+            let nextRow = row.nextElementSibling;
+
+            while (nextRow && [...nextRow.classList].some(c => c.startsWith('level-'))) {
+              const nextLevel = parseInt([...nextRow.classList].find(c => c.startsWith('level-')).split('-')[1]);
+              if (nextLevel <= level) break;
+
+              if (nextLevel === level + 1) {
+                nextRow.style.display = isExpanded ? 'none' : '';
+                if (isExpanded) {
+                  const childBtn = nextRow.querySelector('.expand-btn');
+                  if (childBtn && childBtn.textContent === '−') {
+                    childBtn.textContent = '+';
+                  }
+                }
+              } else if (isExpanded) {
+                nextRow.style.display = 'none';
+              }
+
+              nextRow = nextRow.nextElementSibling;
+            }
+          });
+        });
+      });
+
+      // Drill-down functionality
+      function openDrilldown(plant, line, sku) {
+        const modal = document.getElementById('drilldownModal');
+        const title = document.getElementById('drilldownTitle');
+        const body = document.getElementById('drilldownBody');
+
+        title.textContent = `Drill-down Details: ${plant} → ${line} → ${sku}`;
+
+        // Sample detailed data - in Power BI this would come from your data model
+        body.innerHTML = `
+          <div style="margin-bottom: 20px;">
+            <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-sec);">Production Details</h3>
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th>Batch Number</th>
+                  <th class="num">Production Date</th>
+                  <th class="num">Quantity (Cases)</th>
+                  <th class="num">Quality Score</th>
+                  <th class="num">Downtime (hrs)</th>
+                  <th class="num">Operator</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>BATCH-2025-001</td>
+                  <td class="num">02-Dec-2025</td>
+                  <td class="num">450</td>
+                  <td class="num"><span class="cf-good">98.5%</span></td>
+                  <td class="num">0.5</td>
+                  <td class="num">OP-101</td>
+                  <td><span class="cf-good">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>BATCH-2025-002</td>
+                  <td class="num">02-Dec-2025</td>
+                  <td class="num">400</td>
+                  <td class="num"><span class="cf-warning">94.2%</span></td>
+                  <td class="num">1.2</td>
+                  <td class="num">OP-102</td>
+                  <td><span class="cf-good">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>BATCH-2025-003</td>
+                  <td class="num">01-Dec-2025</td>
+                  <td class="num">380</td>
+                  <td class="num"><span class="cf-good">96.8%</span></td>
+                  <td class="num">0.8</td>
+                  <td class="num">OP-101</td>
+                  <td><span class="cf-good">Completed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-sec);">Quality Issues Root Cause</h3>
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th>Issue Type</th>
+                  <th class="num">Count</th>
+                  <th class="num">% of Total</th>
+                  <th>Root Cause</th>
+                  <th>Action Taken</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Air Leak</td>
+                  <td class="num">12</td>
+                  <td class="num">45%</td>
+                  <td>Sealing temperature variance</td>
+                  <td>Calibrated sealing unit</td>
+                </tr>
+                <tr>
+                  <td>Under-fill</td>
+                  <td class="num">8</td>
+                  <td class="num">30%</td>
+                  <td>Filling machine sensor drift</td>
+                  <td>Replaced sensor</td>
+                </tr>
+                <tr>
+                  <td>Packaging defect</td>
+                  <td class="num">5</td>
+                  <td class="num">19%</td>
+                  <td>Film quality issue</td>
+                  <td>Changed supplier batch</td>
+                </tr>
+                <tr>
+                  <td>Other</td>
+                  <td class="num">2</td>
+                  <td class="num">7%</td>
+                  <td>Various minor issues</td>
+                  <td>Ongoing monitoring</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div>
+            <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-sec);">Downtime Analysis</h3>
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Duration</th>
+                  <th>Type</th>
+                  <th>Reason</th>
+                  <th>Resolved By</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>02-Dec 10:30 AM</td>
+                  <td class="num">45 mins</td>
+                  <td>Planned</td>
+                  <td>Changeover to new SKU</td>
+                  <td>Production Team</td>
+                </tr>
+                <tr>
+                  <td>02-Dec 02:15 PM</td>
+                  <td class="num">30 mins</td>
+                  <td><span class="cf-warning">Unplanned</span></td>
+                  <td>Conveyor belt jam</td>
+                  <td>Maintenance-MT-05</td>
+                </tr>
+                <tr>
+                  <td>01-Dec 11:00 AM</td>
+                  <td class="num">1.2 hrs</td>
+                  <td><span class="cf-bad">Breakdown</span></td>
+                  <td>Motor failure</td>
+                  <td>Maintenance-MT-02</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        modal.style.display = 'flex';
+      }
+
+      function closeDrilldown() {
+        document.getElementById('drilldownModal').style.display = 'none';
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function(event) {
+        const modal = document.getElementById('drilldownModal');
+        if (event.target === modal) {
+          closeDrilldown();
+        }
+      }
+    </script>
+
+    <!-- Drill-down Modal -->
+    <div id="drilldownModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+      <div style="background: var(--card-bg); border-radius: 8px; width: 90%; max-width: 1400px; max-height: 90vh; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #faf9f8; border-bottom: 1px solid var(--border);">
+          <h2 id="drilldownTitle" style="font-size: 18px; font-weight: 600; margin: 0;">Drill-down Details</h2>
+          <button onclick="closeDrilldown()" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-sec); border-radius: 4px;">×</button>
+        </div>
+        <div id="drilldownBody" style="padding: 20px; overflow-y: auto; max-height: calc(90vh - 70px);"></div>
+      </div>
+    </div>
+  </body>
+</html>
